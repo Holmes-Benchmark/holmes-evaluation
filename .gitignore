@@ -1,0 +1,21 @@
+# Created by .ignore support plugin (hsz.mobi)
+/src/wandb/
+/src-refactored/wandb/
+/wandb
+/.idea
+/.env
+.env
+/venv
+.DS_Store
+*/.DS_Store
+*/**/.DS_Store
+__pycache__
+*/__pycache__
+*/**/__pycache__
+*/**/.ipynb_checkpoints
+dumps/*
+results/*
+flash-holmes-datasets/*
+holmes-datasets/*
+!flash-holmes-datasets/README.md
+!holmes-datasets/README.md

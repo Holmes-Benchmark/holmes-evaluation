@@ -8,9 +8,9 @@ It provides code to evaluate an language model on Holmes 🔎, the comprehensive
 
 # 🔎 How does it work?
 To evaluate your desired language model on Holmes 🔎 or FlashHolmes ⚡, follow these three steps: 
-1. **Encoding** Encode inputs of the probing datasets with the language model - more detail [bellow](encoding).
-2. **Probing** Run to probes on the encoded datasets, see [probing](probing). 
-3. **Evaluating** Gather probing results to get an overview of the linguistic knowledge of your chosen language model, following [evaluating](evaluating).
+1. **Encoding** Encode inputs of the probing datasets with the language model - more detail [bellow](#encoding).
+2. **Probing** Run to probes on the encoded datasets, see [probing](#probing). 
+3. **Evaluating** Gather probing results to get an overview of the linguistic knowledge of your chosen language model, following [evaluating](#evaluating).
 
 
 # 🔎 <a name="encoding"></a>First <u>Encoding</u>

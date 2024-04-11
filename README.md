@@ -7,9 +7,6 @@
     <p>
 </div>
 
-![Linguistic Phenomena](https://img.shields.io/badge/Lingustic_Phenomena-66-orange)
-![Probing Datasets](https://img.shields.io/badge/Probing_Datasets-202-orange)
-![Language Models](https://img.shields.io/badge/Language_Models-50-orange)
 
 This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io).
 A project dedicated to investigate linguistic knowledge in language models. 
@@ -21,6 +18,23 @@ A project dedicated to investigate linguistic knowledge in language models.
 🔥This repository provides code to easily evaluate language models on _the comprehensive_ Holmes 🔎 or _the efficient_ FlashHolmes ⚡.
 
 
+<p align="center">
+    <a href="https://www.python.org/">
+            <img alt="Build" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?color=purple">
+    </a>
+    <a href="https://holmes-leaderboard.streamlit.app/">
+        <img alt="Probing Datasets" src="https://img.shields.io/badge/Language_Models-50-blue">
+    </a>
+    <a href="https://holmes-explorer.streamlit.app/">
+        <img alt="Lingustic Phenomena" src="https://img.shields.io/badge/Lingustic_Phenomena-66-orange">
+    </a>
+    <a href="https://holmes-explorer.streamlit.app/">
+        <img alt="Probing Datasets" src="https://img.shields.io/badge/Probing_Datasets-202-orange">
+    </a>
+    <a href="https://github.com/Holmes-Benchmark/holmes-evaluation">
+        <img alt="Opensource" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
+    </a>
+</p>
 ## 🔎 How does it work?
 
 

@@ -52,7 +52,7 @@ You can find the instructions to download Holmes 🔎 ([here](data/holmes/README
 After making sure all things are set up, the evaluation can start.
 For ease of use, you only need to run the investigation script (`src/investigate.py`) and provide the following essential commands:
 * `--model_name` is the huggingface tag of the model to investigate, for example [`google/ul2`](https://huggingface.co/google/ul2).
-* `--version` is the specific benchmark version on which to evaluate. This corresponds to the [data](data) folder, either ([`holmes`](data/holmes)) for Holmes 🔎 ([here](data/holmes/README.md)) or ([`flash-holmes`](data/flash-holmes)) for FlashHolmes ⚡.
+* `--version` is the specific benchmark version on which to evaluate. This corresponds to the [data](data) folder, either ([`holmes`](data/holmes)) for Holmes 🔎 or ([`flash-holmes`](data/flash-holmes)) for FlashHolmes ⚡.
 * `--parallel_probing` add this flag parameter if you are in a hurry and want to parallelize stuff.
 
 <details>

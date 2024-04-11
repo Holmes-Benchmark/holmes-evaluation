@@ -1,29 +1,26 @@
 <div align="center">
 <img style="vertical-align:middle" height="300" src="logo.svg" />
-</div>
-
-<h4 align="center">
     <p>
         <a href="https://holmes-benchmark.github.io/">Project</a> |
         <a href="https://holmes-explorer.streamlit.app/">Explorer 🔎</a> |
         <a href="https://holmes-leaderboard.streamlit.app/">Leaderboard 🚀</a>
     <p>
-</h4>
+</div>
 
 This repository is part of the [Holmes 🔎 benchmark](https://holmes-benchmark.github.io).
 It provides code to evaluate a language model on Holmes 🔎, _the comprehensive option_, or FlashHolmes ⚡, _the efficient variant_.
 
 
-# 🔥 How does it work?
+# 🔎 How does it work?
 
 
-## ⚙️ Setting up the environment
+## 🔎️ Setting up the environment
 To evaluate your desired language model on Holmes 🔎 or FlashHolmes ⚡ make sure to install all the requirements:
 * Please make sure that you use python `3.10`
 * Install the required packages using `pip install -r requirements.txt`
 * If you want to load a language models in `four_bit`, install `bitsandbytes`. In case you trouble with installing, we rely on the version [`0.40.0`](https://github.com/TimDettmers/bitsandbytes/tree/0.40.0) and build the library locally. Make sure `python3 -m bitsandbytes` runs without errors.
 
-## 🗃️ Getting the data
+## 🔎 Getting the data
 Don't worry about parsing linguistic corpora and compose probing datasets, we already did that for.
 You can find the instructions to download Holmes 🔎 ([here](data/holmes/README.md)) and FlashHolmes ⚡ ([here](data/flash-holmes/README.md)).
 
@@ -55,7 +52,7 @@ For the ease of use, you only need to run the investigation script (`src/investi
 After running all probes an evaluation, you will find the aggregated results in the results folder. Either in `results_holmes.csv` for Holmes 🔎 or `results_flash-holmes.csv` for FlashHolmes ⚡.
 
 
-# 📖 References
+### References
 
 Hewitt, J., & Liang, P. (2019, November). Designing and Interpreting Probes with Control Tasks. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) (pp. 2733-2743).
 

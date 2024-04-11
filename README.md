@@ -8,8 +8,7 @@
 </div>
 
 
-This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io).
-A project dedicated to investigate linguistic knowledge in language models. 
+This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io) project, investigating linguistic knowledge in language models. 
 
 🔥Comprehensive coverage of 66 linguistic phenomena addressing _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_.
 
@@ -35,6 +34,7 @@ A project dedicated to investigate linguistic knowledge in language models.
         <img alt="Opensource" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
     </a>
 </p>
+
 ## 🔎 How does it work?
 
 

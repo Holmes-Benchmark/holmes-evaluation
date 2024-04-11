@@ -25,13 +25,13 @@ This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io)
         <img alt="Opensource" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
     </a>
     <a href="https://holmes-leaderboard.streamlit.app/">
-        <img alt="Probing Datasets" src="https://img.shields.io/badge/Language_Models-50-blue">
+        <img alt="Probing Datasets" src="https://img.shields.io/badge/Language_Models-50-01A88D">
     </a>
     <a href="https://holmes-explorer.streamlit.app/">
-        <img alt="Lingustic Phenomena" src="https://img.shields.io/badge/Lingustic_Phenomena-66-orange">
+        <img alt="Lingustic Phenomena" src="https://img.shields.io/badge/Lingustic_Phenomena-66-01A88D">
     </a>
     <a href="https://holmes-explorer.streamlit.app/">
-        <img alt="Probing Datasets" src="https://img.shields.io/badge/Probing_Datasets-202-orange">
+        <img alt="Probing Datasets" src="https://img.shields.io/badge/Probing_Datasets-202-01A88D">
     </a>
 </p>
 

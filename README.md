@@ -8,13 +8,13 @@
 </div>
 
 
-This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io) project and allows to investigate linguistic knowledge in language models:
+This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io) project and allows to investigate linguistic knowledge in language models.
 
 🔥 Comprehensive coverage of 66 linguistic phenomena addressing _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_.
 
 🔥 Already 50 language models are assessed. Inspect the results using the [Leaderboard 🚀](https://holmes-leaderboard.streamlit.app/) and [Explorer 🔎](https://holmes-explorer.streamlit.app/).
 
-🔥 Source code to easily evaluate language models on _the comprehensive_ Holmes 🔎 or _the efficient_ FlashHolmes ⚡.
+🔥 Source code to easily evaluate new language models on _the comprehensive_ Holmes 🔎 or _the efficient_ FlashHolmes ⚡.
 
 
 <p align="center">

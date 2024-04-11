@@ -17,6 +17,6 @@ rm holmes-datasets.zip
 We are happy to provide you with the probing dataset based on licenced resources as well.
 To gain access, please contact us and provide the access conformation of the following resources:
 
-- DRT 
-- RST
-- DEP
+- [Penn Discourse Treebank Version 3.0](https://catalog.ldc.upenn.edu/LDC2019T05)
+- [RST Discourse Treebank](https://catalog.ldc.upenn.edu/LDC2002T07)
+- [English Web Treebank](https://catalog.ldc.upenn.edu/LDC2012T13)

@@ -6,20 +6,20 @@ This repository is part of the [Holmes 🔎 benchmark](https://holmes-benchmark.
 It provides code to evaluate a language model on Holmes 🔎, _the comprehensive option_, or FlashHolmes ⚡, _the efficient variant_.
 
 
-# 🔎 How does it work?
+# 🔥 How does it work?
 
 
-## Setting up the environment
+## ⚙️ Setting up the environment
 To evaluate your desired language model on Holmes 🔎 or FlashHolmes ⚡ make sure to install all the requirements:
 * Please make sure that you use python `3.10`
 * Install the required packages using `pip install -r requirements.txt`
 * If you want to load a language models in `four_bit`, install `bitsandbytes`. In case you trouble with installing, we rely on the version [`0.40.0`](https://github.com/TimDettmers/bitsandbytes/tree/0.40.0) and build the library locally. Make sure `python3 -m bitsandbytes` runs without errors.
 
-## Getting the data
+## 🗃️ Getting the data
 Don't worry about parsing linguistic corpora and compose probing datasets, we already did that for.
 You can find the instructions to download Holmes 🔎 ([here](data/holmes/README.md)) and FlashHolmes ⚡ ([here](data/flash-holmes/README.md)).
 
-## Investigate your language model
+## 🔎 Investigate your language model
 After making sure all things are set up, the evaluation can start. 
 For the ease of use, you only need to run the investigation script (`investigate.py`) and provide the following essential commands:
 * `--model_name` the huggingface tag of the model to investigate, for example [`google/ul2`](https://huggingface.co/google/ul2).
@@ -47,7 +47,8 @@ For the ease of use, you only need to run the investigation script (`investigate
 After running all probes an evaluation, you will find the aggregated results in the results folder. Either in `results_holmes.csv` for Holmes 🔎 or `results_flash-holmes.csv` for FlashHolmes ⚡.
 
 
-# References
+# 📖 References
 
 Hewitt, J., & Liang, P. (2019, November). Designing and Interpreting Probes with Control Tasks. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) (pp. 2733-2743).
+
 Voita, E., & Titov, I. (2020). Information-theoretic probing with minimum description length. In EMNLP 2020-2020 Conference on Empirical Methods in Natural Language Processing, Proceedings of the Conference (pp. 183-196).

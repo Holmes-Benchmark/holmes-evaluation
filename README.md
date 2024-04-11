@@ -19,7 +19,10 @@ This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io)
 
 <p align="center">
     <a href="https://www.python.org/">
-            <img alt="Build" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?color=purple">
+            <img alt="Build" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?color=green">
+    </a>
+    <a href="https://github.com/Holmes-Benchmark/holmes-evaluation">
+        <img alt="Opensource" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
     </a>
     <a href="https://holmes-leaderboard.streamlit.app/">
         <img alt="Probing Datasets" src="https://img.shields.io/badge/Language_Models-50-blue">
@@ -29,9 +32,6 @@ This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io)
     </a>
     <a href="https://holmes-explorer.streamlit.app/">
         <img alt="Probing Datasets" src="https://img.shields.io/badge/Probing_Datasets-202-orange">
-    </a>
-    <a href="https://github.com/Holmes-Benchmark/holmes-evaluation">
-        <img alt="Opensource" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">
     </a>
 </p>
 

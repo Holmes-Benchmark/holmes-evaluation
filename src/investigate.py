@@ -7,11 +7,11 @@ import click
 @click.option('--model_name', type=str, default="bert-base-uncased")
 @click.option('--version', type=str, default="holmes-datasets")
 @click.option('--run_probe', type=bool, default=True)
-@click.option('--run_mdl_probe', type=bool, default=True)
+@click.option('--run_mdl_probe', type=bool, default=False)
 @click.option('--num_hidden_layers', type=str, default="0")
 @click.option('--cuda_visible_devices', type=str, default="")
 @click.option('--seeds', type=str, default="0,1,2,3,4")
-@click.option('--encoding', type=str, default="full")
+@click.option('--model_precision', type=str, default="full")
 @click.option('--encoding_batch_size', type=str, default=10)
 @click.option('--force_encoding', is_flag=True, default=False)
 @click.option('--force_probing', is_flag=True, default=False)
@@ -23,18 +23,18 @@ import click
 @click.option('--result_folder', type=str, default="../results")
 def main(
         version, model_name, run_probe, run_mdl_probe, num_hidden_layers, cuda_visible_devices,
-        seeds, encoding, encoding_batch_size, force_encoding, force_probing, dump_preds,
+        seeds, model_precision, encoding_batch_size, force_encoding, force_probing, dump_preds,
         control_task_types, in_filter, parallel_probing, dump_folder, result_folder
 ):
     failed_runs = []
 
     for control_task_type in control_task_types.split(","):
-        for config_file_path in sorted(glob.glob(f"../{version}/*/*{control_task_type}*.yaml"), reverse=True):
+        for config_file_path in sorted(glob.glob(f"../data/{version}/*/*{control_task_type}*.yaml"), reverse=True):
 
             if in_filter != None and in_filter + "/" not in config_file_path:
                 continue
 
-            encode_command = f"python3 encode.py --dump_folder {dump_folder} --config_file_path {config_file_path} --model_name {model_name} --encoding {encoding} --encoding_batch_size {encoding_batch_size}"
+            encode_command = f"python3 encode.py --dump_folder {dump_folder}/{version} --config_file_path {config_file_path} --model_name {model_name} --model_precision {model_precision} --encoding_batch_size {encoding_batch_size}"
 
             if force_encoding:
                 encode_command += " --force"
@@ -53,7 +53,7 @@ def main(
             else:
                 probing_command = "python3 probe.py"
 
-            probing_command += f" --dump_folder {dump_folder}  --result_folder {result_folder}"
+            probing_command += f" --dump_folder {dump_folder}  --result_folder {result_folder}/{version}"
             probing_command += f" --config_file_path {config_file_path} --model_name {model_name} "
             probing_command += f" --run_probe {run_probe}  --run_mdl_probe {run_mdl_probe}"
             probing_command += f" --num_hidden_layers {num_hidden_layers} --seeds {seeds}"

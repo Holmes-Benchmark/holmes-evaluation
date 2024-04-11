@@ -1,8 +1,5 @@
 <div align="center">
 <img style="vertical-align:middle" height="300" src="logo.svg" />
-![Linguistic Phenomena](https://img.shields.io/badge/Lingustic_Phenomena-66-orange)
-![Probing Datasets](https://img.shields.io/badge/Probing_Datasets-202-orange)
-![Language Models](https://img.shields.io/badge/Language_Models-50-orange)
 
     <p>
         <a href="https://holmes-benchmark.github.io/">Project</a> |
@@ -10,6 +7,10 @@
         <a href="https://holmes-leaderboard.streamlit.app/">Leaderboard 🚀</a>
     <p>
 </div>
+
+![Linguistic Phenomena](https://img.shields.io/badge/Lingustic_Phenomena-66-orange)
+![Probing Datasets](https://img.shields.io/badge/Probing_Datasets-202-orange)
+![Language Models](https://img.shields.io/badge/Language_Models-50-orange)
 
 This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io).
 A project dedicated to investigate linguistic knowledge in language models. 

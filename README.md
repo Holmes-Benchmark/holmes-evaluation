@@ -35,20 +35,20 @@ This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io)
     </a>
 </p>
 
-## 🔎 How does it work?
+# 🔎 How does it work?
 You miss a specific language model? Either [contact us](holmesbenchmark@gmail.com) or run the evaluation on your own. 👇
 
-### 🔎️ Setting up the environment
+## 🔎️ Setting up the environment
 To evaluate your desired language model on Holmes 🔎 or FlashHolmes ⚡, make sure to install all the requirements:
 * Please make sure that you use python `3.10`
 * Install the required packages using `pip install -r requirements.txt`
 * If you want to load language models in `four_bit,` install `bitsandbytes.` If you have trouble installing it, we build the library locally on version [`0.40.0`](https://github.com/TimDettmers/bitsandbytes/tree/0.40.0). Make sure `python3 -m bitsandbytes` runs without errors.
 
-### 🔎 Getting the data
+## 🔎 Getting the data
 Don't worry about parsing linguistic corpora and composing probing datasets; we already did that.
 You can find the instructions to download Holmes 🔎 ([here](data/holmes/README.md)) and FlashHolmes ⚡ ([here](data/flash-holmes/README.md)).
 
-### 🔎 Investigate your language model
+## 🔎 Investigate your language model
 After making sure all things are set up, the evaluation can start.
 For ease of use, you only need to run the investigation script (`src/investigate.py`) and provide the following essential commands:
 * `--model_name` is the huggingface tag of the model to investigate, for example [`google/ul2`](https://huggingface.co/google/ul2).

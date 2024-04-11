@@ -30,25 +30,6 @@ def get_load_configs(
     return configs
 
 
-def filter_configs(configs, folds, mlflow_url=None, reporting="mlflow"):
-
-    checked_configs = [
-        check_config(config=config, mlflow_url=mlflow_url, folds=folds, reporting=reporting)
-        for config in configs
-    ]
-    filtered_configs = [
-        {
-            "folds": folds_to_do,
-            **config
-        }
-        for skip_run, folds_to_do, config in checked_configs
-        if not skip_run
-    ]
-
-    return filtered_configs
-
-
-
 def load_base_config(
         config, seeds, num_hidden_layers,
         model_name, batch_size, control_task_type, project_prefix, encoding

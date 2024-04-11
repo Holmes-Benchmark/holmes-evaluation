@@ -49,9 +49,9 @@ def main(
                 failed_runs.append(encode_command)
 
             if parallel_probing:
-                probing_command = "python3 run.py"
+                probing_command = "python3 probe_parallel.py"
             else:
-                probing_command = "python3 run_plain.py"
+                probing_command = "python3 probe.py"
 
             probing_command += f" --dump_folder {dump_folder}  --result_folder {result_folder}"
             probing_command += f" --config_file_path {config_file_path} --model_name {model_name} "
@@ -76,6 +76,9 @@ def main(
             if len(failed_runs) > 0:
                 file = open(model_name.replace("/", "_") + "_fails.txt", "w+")
                 file.writelines(failed_runs)
+
+    probing_command = f"python3 evaluate.py --result_folder {result_folder} --version {version}"
+    print(f"Gathering Results: {probing_command}")
 
 if __name__ == "__main__":
     main()

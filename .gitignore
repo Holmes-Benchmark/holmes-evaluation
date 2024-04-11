@@ -15,7 +15,7 @@ __pycache__
 */**/.ipynb_checkpoints
 dumps/*
 results/*
-flash-holmes-datasets/*
-holmes-datasets/*
-!flash-holmes-datasets/README.md
+data/flash-holmes/*
+data/holmes/*
+!versions/flash-holmes/README.md
 !holmes-datasets/README.md

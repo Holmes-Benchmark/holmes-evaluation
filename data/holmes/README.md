@@ -8,8 +8,8 @@ To download the probing datasets based on freely available resources, run the fo
 
 ```
 wget https://drive.switch.ch/index.php/s/mzDNtqvqVC7TFZE/download
-unzip todo
-rm todo
+unzip holmes-datasets.zip -d .
+rm holmes-datasets.zip
 
 ```
 
@@ -17,6 +17,6 @@ rm todo
 We are happy to provide you with the probing dataset based on licenced resources as well.
 To gain access, please contact us and provide the access conformation of the following resources:
 
-- DRT
+- DRT 
 - RST
 - DEP

@@ -1,6 +1,5 @@
 <div align="center">
 <img style="vertical-align:middle" height="300" src="logo.svg" />
-
     <p>
         <a href="https://holmes-benchmark.github.io/">Project</a> |
         <a href="https://holmes-explorer.streamlit.app/">Explorer 🔎</a> |

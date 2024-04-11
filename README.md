@@ -29,9 +29,12 @@ For the ease of use, you only need to run the investigation script (`investigate
 
 
 
-<details Additional parameters>
+<details>
+<summary>Additional parameters you may need.</summary>
+
 * `--force_encoding`
 * `--force_probing`
+* 
 </details>
 
 * `encoding`

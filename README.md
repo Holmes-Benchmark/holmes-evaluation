@@ -19,7 +19,7 @@ This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io)
 
 <p align="center">
     <a href="https://www.python.org/">
-            <img alt="Build" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?color=green">
+            <img alt="Build" src="https://img.shields.io/badge/Made%20with-Python-1f425f.svg?color=01A88D">
     </a>
     <a href="https://github.com/Holmes-Benchmark/holmes-evaluation">
         <img alt="Opensource" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103">

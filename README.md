@@ -7,8 +7,7 @@
     <p>
 </div>
 
-
-This repository is part of the [Holmes 🔎](https://holmes-benchmark.github.io) project and allows to investigate linguistic knowledge in language models.
+[Holmes 🔎](https://holmes-benchmark.github.io) is benchmark dedicated to linguistic knowledge within language models and features:
 
 🔥 Comprehensive coverage of 66 linguistic phenomena addressing _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_.
 

@@ -3,7 +3,7 @@
 </div>
 
 This repository is part of the [Holmes 🔎 benchmark](https://holmes-benchmark.github.io).
-It provides code to evaluate a language model on Holmes 🔎, the comprehensive option, or FlashHolmes ⚡, the efficient variant.
+It provides code to evaluate a language model on Holmes 🔎, _the comprehensive option_, or FlashHolmes ⚡, _the efficient variant_.
 
 
 # 🔎 How does it work?
@@ -19,22 +19,25 @@ To evaluate your desired language model on Holmes 🔎 or FlashHolmes ⚡ make s
 Don't worry about parsing linguistic corpora and compose probing datasets, we already did that for.
 You can find the instructions to download Holmes 🔎 ([here](data/holmes/README.md)) and FlashHolmes ⚡ ([here](data/flash-holmes/README.md)).
 
-compose any probing dataset or
-  the README in 
-
-## Requirements
+## Investigate your language model
 After making sure all things are set up, the evaluation can start. 
 For the ease of use, you only need to run the investigation script (`investigate.py`) and provide the following essential commands:
-* `model_name` the huggingface tag of the model to investigate.
-* `version` the specific benchmark version to evaluate on. This corresponds to the dataset folder, either `holmes-datasets` for Holmes 🔎 or `flash-holmes-datasets` for FlashHolmes ⚡.
+* `--model_name` the huggingface tag of the model to investigate, for example [`google/ul2`](https://huggingface.co/google/ul2).
+* `--version` the specific benchmark version to evaluate on. This corresponds to the [data](data) folder, either ([`holmes`](data/holmes)) for Holmes 🔎 ([here](data/holmes/README.md)) or ([`flash-holmes`](data/flash-holmes)) for FlashHolmes ⚡.
+* `--parallel_probing` add this flag parameter if you are in a hurry and want to parallelize stuff.
+
+
+
+
+<details Additional parameters>
+* `--force_encoding`
+* `--force_probing`
+</details>
+
 * `encoding`
 * `encoding_batch_size`
-* `parallel_probing`
 * `dump_folder`
 * `result_folder`
-
-
-
 * `force_encoding`
 * `force_probing`
 * `in_filter`

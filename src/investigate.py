@@ -59,7 +59,7 @@ def main(
             else:
                 probing_command = "python3 probe.py"
 
-            probing_command += f" --dump_folder {dump_folder}  --result_folder {result_folder}/{version}"
+            probing_command += f" --dump_folder {dump_folder}/{version}  --result_folder {result_folder}/{version}"
             probing_command += f" --config_file_path {config_file_path} --model_name {model_name} "
             probing_command += f" --run_probe {run_probe}  --run_mdl_probe {run_mdl_probe}"
             probing_command += f" --num_hidden_layers {num_hidden_layers} --seeds {seeds}"

@@ -51,7 +51,7 @@ For ease of use, you only need to run the investigation script (`src/investigate
 * `--model_name` is the huggingface tag of the model to investigate, for example [`google/ul2`](https://huggingface.co/google/ul2).
 * `--version` is the specific benchmark version on which to evaluate. This corresponds to the [data](data) folder, either ([`holmes`](data/holmes)) for Holmes 🔎 or ([`flash-holmes`](data/flash-holmes)) for FlashHolmes ⚡.
 * `--parallel_probing` add this flag parameter if you are in a hurry and want to parallelize stuff.
-
+* `--cuda_visible_devices` specifies the GPU devices to use, for example, with `0,1` the evaluation will us GPU 0 and 1. 
 <details>
 <summary>Additional parameters you may need.</summary>
 

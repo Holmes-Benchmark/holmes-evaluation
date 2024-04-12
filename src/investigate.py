@@ -9,7 +9,7 @@ import click
 @click.option('--run_probe', type=bool, default=True)
 @click.option('--run_mdl_probe', type=bool, default=False)
 @click.option('--num_hidden_layers', type=str, default="0")
-@click.option('--cuda_visible_devices', type=str)
+@click.option('--cuda_visible_devices', type=str, default="")
 @click.option('--seeds', type=str, default="0,1,2,3,4")
 @click.option('--model_precision', type=str, default="full")
 @click.option('--encoding_batch_size', type=str, default=10)
@@ -39,7 +39,7 @@ def main(
             if force_encoding:
                 encode_command += " --force"
 
-            if cuda_visible_devices != None:
+            if cuda_visible_devices != "":
                 encode_command = "CUDA_VISIBLE_DEVICES=" + cuda_visible_devices + " " + encode_command
 
             print(f"Run encoding: {encode_command}")

@@ -5,7 +5,7 @@ import click
 
 @click.command()
 @click.option('--model_name', type=str, default="bert-base-uncased")
-@click.option('--version', type=str, default="holmes-datasets")
+@click.option('--version', type=str, default="holmes")
 @click.option('--run_probe', type=bool, default=True)
 @click.option('--run_mdl_probe', type=bool, default=False)
 @click.option('--num_hidden_layers', type=str, default="0")

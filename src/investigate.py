@@ -28,6 +28,9 @@ def main(
 ):
     failed_runs = []
 
+    os.system(f"mkdir -p ../dumps/{version}/")
+    os.system(f"mkdir -p ../results/{version}/")
+
     for control_task_type in control_task_types.split(","):
         for config_file_path in sorted(glob.glob(f"../data/{version}/*/*{control_task_type}*.yaml"), reverse=True):
 

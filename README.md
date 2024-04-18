@@ -7,9 +7,9 @@
     <p>
 </div>
 
-[Holmes 🔎](https://holmes-benchmark.github.io) is benchmark dedicated to linguistic knowledge within language models and features:
+[Holmes 🔎](https://holmes-benchmark.github.io) is benchmark dedicated to asses the linguistic competence of language models and features:
 
-* Comprehensive analysis of 66 linguistic phenomena including _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_.
+* Comprehensive analysis of 66 linguistic phenomena covering _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_ abilities.
 * Benchmark evaluations of 50 language models. Dive into the insights via [Holmes Leaderboard 🚀](https://holmes-leaderboard.streamlit.app/) and [Holmes Explorer 🔎](https://holmes-explorer.streamlit.app/).
 * Source code for evaluating new language models using the comprehensive Holmes 🔎 or the streamlined FlashHolmes ⚡.
 

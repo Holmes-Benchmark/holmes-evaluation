@@ -45,10 +45,13 @@ To evaluate your chosen language model using the Holmes 🔎 or FlashHolmes ⚡ 
 Don't worry about parsing linguistic corpora and composing probing datasets: we already did that.
  Find the download instructions for Holmes 🔎 ([here](data/holmes/README.md)) and for FlashHolmes ⚡ ([here](data/flash-holmes/README.md)).
 
-## 🔎 Investigate your language model
-Once the setup is complete, start the evaluation:
-For ease of use, you only need to run the investigation script (`src/investigate.py`) and provide the following essential commands:
-* `--model_name` is the huggingface tag of the model to investigate, for example [`google/ul2`](https://huggingface.co/google/ul2).
+## 🔎 Investigate your language model using one command
+For ease of use, you can evaluate a language model with no more than on command like:
+
+`python3 investigate.py --model_name facebook/bart-base --version flash-holmes --parallel_probing --cuda_visible_devices 0,1`
+
+The investigation script (`src/investigate.py`) requires the following essential commands:
+* `--model_name` is the huggingface tag of the model to investigate, for example [`facebook/bart-base`](https://huggingface.co/facebook/bart-base).
 * `--version` is the specific benchmark version on which to evaluate. This corresponds to the [data](data) folder, either ([`holmes`](data/holmes)) for Holmes 🔎 or ([`flash-holmes`](data/flash-holmes)) for FlashHolmes ⚡.
 * `--parallel_probing` add this flag parameter if you are in a hurry and want to parallelize stuff.
 * `--cuda_visible_devices` specifies the GPU devices to use, for example, with `0,1` the evaluation will us GPU 0 and 1. 

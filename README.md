@@ -39,7 +39,7 @@ Missing a specific language model? Either [email us](holmesbenchmark@gmail.com) 
 To evaluate your chosen language model using the Holmes 🔎 or FlashHolmes ⚡ benchmarks, please ensure your setup meets the following requirements:
 * Python version 3.10.
 * Install all necessary packages using pip install -r requirements.txt`.
-* If you want to load language models with `four_bit,` install `bitsandbytes.` If you have trouble installing it, use the version [`0.40.0`](https://github.com/TimDettmers/bitsandbytes/tree/0.40.0) and verify the installation with `python3 -m bitsandbytes`.
+* If you want to load language models with `four_bit,` install `bitsandbytes.` If you have trouble installing it, use the version [`0.42.0`](https://github.com/TimDettmers/bitsandbytes/tree/0.42.0) and verify the installation with `python3 -m bitsandbytes`.
 
 ## 🔎 Getting the data
 Don't worry about parsing linguistic corpora and composing probing datasets: we already did that.

@@ -1,7 +1,7 @@
 <div align="center">
 <img style="vertical-align:middle" height="300" src="logo.svg" />
     <p>
-        <b><a href="https://holmes-benchmark.github.io/"><b>Project</b></a> |</b>
+        <b><a href="https://holmes-benchmark.github.io/"><b>Project Page</b></a> |</b>
         <b><a href="https://holmes-explorer.streamlit.app/">Explorer 🔎</a> |</b>
         <b><a href="https://holmes-leaderboard.streamlit.app/">Leaderboard 🚀</a></b>
     <p>
@@ -9,10 +9,11 @@
 
 [Holmes 🔎](https://holmes-benchmark.github.io) is benchmark dedicated to asses the linguistic competence of language models and features:
 
-* Comprehensive analysis of 66 linguistic phenomena covering _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_ abilities.
-* Benchmark evaluations of 50 language models. Dive into the insights via [Holmes Leaderboard 🚀](https://holmes-leaderboard.streamlit.app/) and [Holmes Explorer 🔎](https://holmes-explorer.streamlit.app/).
+* Comprehensive analysis of 66 linguistic phenomena covering _morphology_, _syntax_, _semantics_, _reasoning_, and _discourse_ abilities based on over 200 datasets.
+* Benchmark evaluations of 59 language models. Dive into the insights via [Holmes Leaderboard 🚀](https://holmes-leaderboard.streamlit.app/) and [Holmes Explorer 🔎](https://holmes-explorer.streamlit.app/).
 * Source code for evaluating new language models using the comprehensive Holmes 🔎 or the streamlined FlashHolmes ⚡.
 
+Missing a specific language model? Either [email us](holmesbenchmark@gmail.com) or evaluate it yourself. 👇
 
 <p align="center">
     <a href="https://www.python.org/">
@@ -33,7 +34,6 @@
 </p>
 
 # 🔎 How does it work?
-Missing a specific language model? Either [email us](holmesbenchmark@gmail.com) or evaluate it yourself. 👇
 
 ## 🔎️ Setting up the environment
 To evaluate your chosen language model using the Holmes 🔎 or FlashHolmes ⚡ benchmarks, please ensure your setup meets the following requirements:
@@ -75,7 +75,12 @@ The investigation script (`src/investigate.py`) requires the following essential
 
 After running all probes an evaluations, you will find the aggregated results in the results folder. Either in `results_holmes.csv` for Holmes 🔎 or `results_flash-holmes.csv` for FlashHolmes ⚡.
 
+# 🔎Disclaimer
+We provide datasets in a specific format without endorsing their quality, fairness, or confirming your licensing rights. 
+Users must verify their permissions under the dataset's license and properly credit the dataset owner.
 
+If you own a dataset and want to update or remove it from our library, please contact us. 
+Additionally, if you wish to include your dataset or model for evaluation, feel free contact as well!
 ### References
 
 Hewitt, J., & Liang, P. (2019, November). Designing and Interpreting Probes with Control Tasks. In Proceedings of the 2019 Conference on Empirical Methods in Natural Language Processing and the 9th International Joint Conference on Natural Language Processing (EMNLP-IJCNLP) (pp. 2733-2743).

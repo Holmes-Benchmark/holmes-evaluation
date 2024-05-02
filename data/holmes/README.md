@@ -4,14 +4,12 @@ A majority of the datasets a freely available.
 For some of them, we use licenced datasets due to the absence of alternatives.
 
 ## Free Available Datasets
-To download the probing datasets based on freely available resources, run the following commands.
 
-```
-wget https://drive.switch.ch/index.php/s/mzDNtqvqVC7TFZE/download
-unzip holmes-datasets.zip -d .
-rm holmes-datasets.zip
+You can download the datasets (`holmes-free.zip`) based on freely available resources from the following link:
 
-```
+`https://www.dropbox.com/scl/fi/81fdzhv4ee8ax5dxlh35f/holmes-free.zip?rlkey=y8i68335eiiiepnrwte90wdiv&st=0ohxktpp&dl=0`
+
+This zip file embodies a separate folder for each dataset. Unpack them directly into this directory.
 
 ## Licenced Datasets
 We are happy to provide you with the probing dataset based on licenced resources as well.

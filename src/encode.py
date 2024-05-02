@@ -28,7 +28,7 @@ def main(
 
     control_task_type = CONTROL_TASK_TYPES[config["control_task_type"]]
 
-    probe_frame = load_probe_file(base_path, control_task_type).sample(100)
+    probe_frame = load_probe_file(base_path, control_task_type)
 
     control_task_type = config["control_task_type"]
     probe_task_type = PROBE_TASK_TYPES(config["probe_task_type"])

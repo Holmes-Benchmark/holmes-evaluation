@@ -76,7 +76,7 @@ def main(
 
     os.environ["OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
 
-    probe_frame = load_probe_file(base_path, control_task_type).sample(100)
+    probe_frame = load_probe_file(base_path, control_task_type)
 
     dump_id = "__".join([model_name, encoding, configs[0]["control_task_type"].name, configs[0]["probe_name"], str(probe_frame.shape[0]), "False"])
 

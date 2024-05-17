@@ -50,8 +50,6 @@ For ease of use, you can evaluate a language model with no more than on command 
 
 <img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/investigate.png" />
 
-`python3 investigate.py --model_name facebook/bart-base --version flash-holmes --parallel_probing --cuda_visible_devices 0,1`
-
 The investigation script (`src/investigate.py`) requires the following essential commands:
 * `--model_name` is the huggingface tag of the model to investigate, for example [`facebook/bart-base`](https://huggingface.co/facebook/bart-base).
 * `--version` is the specific benchmark version on which to evaluate. This corresponds to the [data](data) folder, either ([`holmes`](data/holmes)) for Holmes 🔎 or ([`flash-holmes`](data/flash-holmes)) for FlashHolmes ⚡.

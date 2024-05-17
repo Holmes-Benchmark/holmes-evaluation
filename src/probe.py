@@ -44,7 +44,7 @@ def main(
         batch_size, run_probe, run_mdl_probe, project_prefix, dump_preds, force,
         dump_folder, result_folder
 ):
-    base_path = "/".join(config_file_path.split("/")[:-1]) + "/folds.csv"
+    base_path = "/".join(config_file_path.split("/")[:-1]) + "/samples.csv"
 
     file_stream = open(config_file_path, "r")
     config = yaml.safe_load(file_stream)

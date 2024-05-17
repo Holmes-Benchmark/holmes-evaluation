@@ -21,7 +21,7 @@ from utils.session_utils import clean_session
 def main(
         config_file_path, encoding_batch_size, model_name, model_precision, dump_folder, force
 ):
-    base_path = "/".join(config_file_path.split("/")[:-1]) + "/folds.csv"
+    base_path = "/".join(config_file_path.split("/")[:-1]) + "/samples.csv"
 
     file_stream = open(config_file_path, "r")
     config = yaml.safe_load(file_stream)

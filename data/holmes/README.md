@@ -5,11 +5,12 @@ For some of them, we use licenced datasets due to the absence of alternatives.
 
 ## Free Available Datasets
 
-You can download the datasets (`holmes-free.zip`) based on freely available resources from the following link:
+Run the download script (`download.py`) to download the data.
+It automatically downloads all data and unpacks it in this folder.
 
-`https://www.dropbox.com/scl/fi/81fdzhv4ee8ax5dxlh35f/holmes-free.zip?rlkey=y8i68335eiiiepnrwte90wdiv&st=0ohxktpp&dl=0`
+Otherwise, you can make it manually and download the dataset (`holmes-free.zip`) from the following link and unpack the content in this folder:
 
-This zip file embodies a separate folder for each dataset. Unpack them directly into this directory.
+`https://drive.google.com/file/d/1rwqa4kK-iDfIc8jji6euEfs2rt7_qx_s/view?usp=sharing`
 
 ## Licenced Datasets
 We are happy to provide you with the probing dataset based on licenced resources as well.

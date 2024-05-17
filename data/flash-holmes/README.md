@@ -1,8 +1,9 @@
 # FlashHolmes Probing Dataset
 This folder embodies the datasets of FlashHolmes.
-As a streamlined version of Holmes, it offers a fast and reliable evaluation of linguistic knowledge in language models with a fraction of the Holmes' compute.
-You can download the datasets (`flash-holmes.zip`) from the following link:
+As a streamlined version of Holmes, it offers a fast and reliable evaluation of linguistic knowledge in language models with a fraction of Holmes' compute.
+Run the download script (`download.py`) to download the data.
+It automatically downloads all data and unpacks it in this folder.
 
-`https://www.dropbox.com/scl/fi/szq9babp9pkwyf55vh6fv/flash-holmes.zip?rlkey=qsv84y1i0f68r4t3udqd9wjc6&e=1&st=6u7n7a7a&dl=0`
+Otherwise, you can make it manually and download the dataset (`flash-holmes.zip`) from the following link and unpack the content in this folder:
 
-This zip file embodies a separate folder for each dataset. Unpack them directly into this directory.
+`https://drive.google.com/file/d/1dajhNPzBP4QzDT4bfYSp_mPHToxJSO_L/view?usp=sharing`

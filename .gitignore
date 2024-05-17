@@ -18,6 +18,6 @@ results/*
 data/flash-holmes/*
 data/holmes/*
 !versions/flash-holmes/README.md
-!holmes-datasets/README.md
+!versions/holmes/README.md
 !versions/flash-holmes/download.py
-!holmes-datasets/download.py
+!versions/holmes/download.py

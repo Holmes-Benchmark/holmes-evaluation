@@ -6,7 +6,7 @@ current_directory = os.path.split(os.getcwd())[1]
 
 url = "https://drive.google.com/file/d/1rwqa4kK-iDfIc8jji6euEfs2rt7_qx_s/view?usp=sharing"
 
-output_file = "flash-free.zip"
+output_file = "holmes-free.zip"
 
 if current_directory != "holmes":
     print("This is the wrong directory. Please run this script in the folder data/flash-holmes")

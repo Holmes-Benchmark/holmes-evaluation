@@ -5,7 +5,7 @@ As a streamlined version of Holmes, it offers a fast and reliable evaluation of 
 Run the download script (`download.py`) to download the data.
 It automatically downloads all data and unpacks it in this folder.
 
-<img style="vertical-align:middle" height="500" src="https://holmes-benchmark.github.io/assets/img/download_flash_holmes.png" />
+<img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/download_flash_holmes.png" />
 
 
 Otherwise, you can make it manually and download the dataset (`flash-holmes.zip`) from the following link and unpack the content in this folder:

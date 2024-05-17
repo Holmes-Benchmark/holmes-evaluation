@@ -48,6 +48,8 @@ Don't worry about parsing linguistic corpora and composing probing datasets: we 
 ## 🔎 Investigate your language model using one command
 For ease of use, you can evaluate a language model with no more than on command like:
 
+<img style="vertical-align:middle" src="https://holmes-benchmark.github.io/assets/img/investigate.png" />
+
 `python3 investigate.py --model_name facebook/bart-base --version flash-holmes --parallel_probing --cuda_visible_devices 0,1`
 
 The investigation script (`src/investigate.py`) requires the following essential commands:

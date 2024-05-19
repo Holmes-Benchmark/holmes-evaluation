@@ -43,14 +43,13 @@ class ProbeWorker:
 
     def get_local_run_id(self):
         run_id = "/".join([
-            self.hyperparameter["model_name"],
+            self.hyperparameter["model_name"].replace('/', "__"),
             self.hyperparameter["encoding"],
             self.hyperparameter["control_task_type"],
             str(self.hyperparameter["sample_size"]),
             str(self.hyperparameter["seed"]),
             str(self.hyperparameter["num_hidden_layers"]),
         ])
-        run_id = run_id.replace('/', "__")
 
         return run_id
 

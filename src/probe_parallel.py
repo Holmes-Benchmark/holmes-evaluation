@@ -116,8 +116,8 @@ def main(
 
     result_ids = []
 
-    for param, train_dataset, dev_dataset, test_dataset, dump_preds, force in default_params:
-        result_id = ray_run_probe_with_params.remote(param, train_dataset, dev_dataset, test_dataset, dump_preds, force)
+    for param, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix in default_params:
+        result_id = ray_run_probe_with_params.remote(param, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix)
         result_ids.append(result_id)
 
     for result_id in result_ids:

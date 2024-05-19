@@ -112,7 +112,7 @@ def main(
                     **config
                 }
 
-                default_params.append((param_ele, ray_train_dataset, ray_dev_dataset, ray_test_dataset, dump_preds, force))
+                default_params.append((param_ele, ray_train_dataset, ray_dev_dataset, ray_test_dataset, dump_preds, force, project_prefix))
 
     result_ids = []
 

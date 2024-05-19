@@ -21,11 +21,12 @@ def main(
         else:
             final_metric = list(metrics["full test f1"])[-1]
 
-        probing_dataset, model_name, encoding, control_task_type, sample_size, seed, num_hidden_layers, _ = (
+        _, probing_dataset, model_name, encoding, control_task_type, sample_size, seed, num_hidden_layers, _ = (
             result_file
                 .replace(f"{result_folder}/{version}", "")
                 .split("done")[0].split("/")
         )
+
         results.append({
             "probing_dataset": probing_dataset,
             "model_name": model_name,

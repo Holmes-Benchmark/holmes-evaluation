@@ -27,6 +27,8 @@ def main(
                 .split("done")[0].split("/")
         )
 
+        probing_dataset = probing_dataset.replace("flash-holmes-", "").replace("holmes-", "")
+
         results.append({
             "probing_dataset": probing_dataset,
             "model_name": model_name,

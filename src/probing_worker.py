@@ -42,7 +42,7 @@ class ProbeWorker:
 
 
     def get_local_run_id(self):
-        return "/".join([
+        run_id = "/".join([
             self.hyperparameter["model_name"],
             self.hyperparameter["encoding"],
             self.hyperparameter["control_task_type"],
@@ -50,6 +50,9 @@ class ProbeWorker:
             str(self.hyperparameter["seed"]),
             str(self.hyperparameter["num_hidden_layers"]),
         ])
+        run_id = run_id.replace('/', "__")
+
+        return run_id
 
     def get_logger(self):
         return CSVLogger(save_dir=self.result_folder, name=f"{self.project_prefix}-{self.probe_name}/{self.get_local_run_id()}")

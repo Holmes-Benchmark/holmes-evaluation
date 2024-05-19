@@ -627,8 +627,6 @@ def dump_data(probe_frame, probe_task_type, control_task_type, encoding_batch_si
 
 def load_data(dump_folder, dump_id, encoding, scalar_mixin=False):
 
-    dump_id = dump_id.replace('/', "__")
-
     dump_file = f"{dump_folder}/{dump_id}.pickle"
 
     if os.path.exists(dump_file):

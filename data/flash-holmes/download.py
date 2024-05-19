@@ -4,7 +4,7 @@ from os.path import exists
 
 current_directory = os.path.split(os.getcwd())[1]
 
-url = "https://drive.google.com/file/d/1dajhNPzBP4QzDT4bfYSp_mPHToxJSO_L/view?usp=sharing"
+url = "https://drive.google.com/file/d/1RloBZXEYgNuV54S7c_frQjb4LN2KnzIK/view?usp=sharing"
 
 output_file = "flash-holmes.zip"
 

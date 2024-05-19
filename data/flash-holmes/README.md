@@ -10,4 +10,4 @@ It automatically downloads all data and unpacks it in this folder.
 
 Otherwise, you can make it manually and download the dataset (`flash-holmes.zip`) from the following link and unpack the content in this folder:
 
-`https://drive.google.com/file/d/1dajhNPzBP4QzDT4bfYSp_mPHToxJSO_L/view?usp=sharing`
+`https://drive.google.com/file/d/1RloBZXEYgNuV54S7c_frQjb4LN2KnzIK/view?usp=sharing`

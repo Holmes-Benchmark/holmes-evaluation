@@ -85,6 +85,7 @@ def main(
 
     probing_command = f"python3 evaluate.py --result_folder {result_folder} --version {version}"
     print(f"Gathering Results: {probing_command}")
+    os.system(probing_command)
 
 if __name__ == "__main__":
     main()

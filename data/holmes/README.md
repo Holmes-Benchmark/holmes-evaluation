@@ -12,7 +12,7 @@ It automatically downloads all data and unpacks it in this folder.
 
 Otherwise, you can make it manually and download the dataset (`holmes-free.zip`) from the following link and unpack the content in this folder:
 
-`https://drive.google.com/file/d/1rwqa4kK-iDfIc8jji6euEfs2rt7_qx_s/view?usp=sharing`
+`https://drive.google.com/file/d/1rkTka-k5dE2GqAXJxEcgI2FJGCaQvDVd/view?usp=sharing`
 
 ## Licenced Datasets
 We are happy to provide you with the probing dataset based on licenced resources as well.

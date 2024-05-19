@@ -96,7 +96,7 @@ def main(
                     **config
                 }
 
-                default_params.append((param_ele, train_dataset, dev_dataset, test_dataset, dump_preds, force))
+                default_params.append((param_ele, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix))
 
 
     for param in default_params:

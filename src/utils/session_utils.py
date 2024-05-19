@@ -17,10 +17,10 @@ def clean_session():
 
 
 @ray.remote(num_gpus=1/24)
-def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force):
-    run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force)
+def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix):
+    run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix)
 
-def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force):
+def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix):
     hyperparameter = params["hyperparameter"]
 
     hyperparameter["control_task_type"] = params["control_task_type"].name
@@ -31,11 +31,6 @@ def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump
     hyperparameter["sample_size"] = params["sample_size"]
 
     hyperparameter["input_dim"] = params["input_dim"]
-
-    if params["project_prefix"] == "":
-        project_prefix = params["probes_samples_path"].split("/")[0]
-    else:
-        project_prefix = params["project_prefix"] + "-" + params["probes_samples_path"].split("/")[0]
 
     probe_name = params["probes_samples_path"].split("/")[-2]
 

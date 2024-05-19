@@ -54,7 +54,12 @@ class ProbeWorker:
         return run_id
 
     def get_logger(self):
-        return CSVLogger(save_dir=self.result_folder, name=f"{self.project_prefix}-{self.probe_name}/{self.get_local_run_id()}")
+
+        if self.project_prefix != "":
+            return CSVLogger(save_dir=self.result_folder, name=f"{self.project_prefix}-{self.probe_name}/{self.get_local_run_id()}")
+        else:
+            return CSVLogger(save_dir=self.result_folder, name=f"{self.probe_name}/{self.get_local_run_id()}")
+
 
     def mark_run_as_done(self, logger):
         os.system(f"mv {logger.log_dir} {logger.root_dir}/done")

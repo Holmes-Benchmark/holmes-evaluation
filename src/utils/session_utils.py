@@ -32,11 +32,6 @@ def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump
 
     hyperparameter["input_dim"] = params["input_dim"]
 
-    if params["project_prefix"] == "":
-        project_prefix = params["probes_samples_path"].split("/")[0]
-    else:
-        project_prefix = params["project_prefix"] + "-" + params["probes_samples_path"].split("/")[0]
-
     probe_name = params["probes_samples_path"].split("/")[-2]
 
     if params["probe_type"] == "linear":

@@ -13,7 +13,7 @@ def main(
     result_files = glob.glob(f"{result_folder}/{version}*/**/done/*.csv", recursive=True)
     results = []
 
-    for result_file in result_files[:10]:
+    for result_file in result_files:
         metrics = pandas.read_csv(result_file)
 
         if "full test pearson" in metrics.columns:

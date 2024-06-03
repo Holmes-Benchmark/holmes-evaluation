@@ -10,7 +10,7 @@ import pandas
 def main(
         result_folder, version
 ):
-    result_files = glob.glob(f"{result_folder}/{version}*/**/done/*.csv", recursive=True)
+    result_files = glob.glob(f"{result_folder}/{version}/**/done/*.csv", recursive=True)
     results = []
 
     for result_file in result_files:

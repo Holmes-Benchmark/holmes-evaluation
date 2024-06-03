@@ -87,6 +87,10 @@ def main(
     print(f"Gathering Results: {probing_command}")
     os.system(probing_command)
 
+    probing_command = f"python3 package.py --result_folder {result_folder} --version {version}"
+    print(f"Package Results: {probing_command}")
+    os.system(probing_command)
+
 if __name__ == "__main__":
     main()
 

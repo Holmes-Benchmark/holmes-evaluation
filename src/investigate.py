@@ -63,6 +63,7 @@ def main(
             probing_command += f" --config_file_path {config_file_path} --model_name {model_name} "
             probing_command += f" --run_probe {run_probe}  --run_mdl_probe {run_mdl_probe}"
             probing_command += f" --num_hidden_layers {num_hidden_layers} --seeds {seeds}"
+            probing_command += f" --model_precision {model_precision}"
 
             if dump_preds:
                 probing_command += " --dump_preds"

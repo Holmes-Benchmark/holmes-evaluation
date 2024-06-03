@@ -42,7 +42,7 @@ def get_hyperparameters(hyperparameters:Dict):
 @click.option('--dump_folder', type=str, default="../dumps")
 @click.option('--result_folder', type=str, default="../results")
 def main(
-        config_file_path, model_name, encoding, seeds, num_hidden_layers,
+        config_file_path, model_name, model_precision, seeds, num_hidden_layers,
         batch_size, run_probe, run_mdl_probe, project_prefix, dump_preds, force,
         dump_folder, result_folder
 ):

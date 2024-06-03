@@ -74,7 +74,7 @@ def main(
 
     probe_frame = load_probe_file(base_path, control_task_type)
 
-    dump_id = "__".join([model_name, encoding, configs[0]["control_task_type"].name, configs[0]["probe_name"], str(probe_frame.shape[0]), "False"])
+    dump_id = "__".join([model_name, model_precision, configs[0]["control_task_type"].name, configs[0]["probe_name"], str(probe_frame.shape[0]), "False"])
 
     probing_frames = load_data(dump_folder, dump_id, control_task_type, scalar_mixin=False)
 

@@ -54,7 +54,7 @@ def main(
     control_task_type = CONTROL_TASK_TYPES[config["control_task_type"]]
 
     base_config = load_base_config(
-        config=config, encoding=encoding,
+        config=config, encoding=model_precision,
         seeds=seeds, num_hidden_layers=num_hidden_layers,
         model_name=model_name, batch_size=batch_size,
         control_task_type=control_task_type, project_prefix=project_prefix
@@ -78,7 +78,7 @@ def main(
 
     probe_frame = load_probe_file(base_path, control_task_type)
 
-    dump_id = "__".join([model_name, encoding, configs[0]["control_task_type"].name, configs[0]["probe_name"], str(probe_frame.shape[0]), "False"])
+    dump_id = "__".join([model_name, model_precision, configs[0]["control_task_type"].name, configs[0]["probe_name"], str(probe_frame.shape[0]), "False"])
 
     probing_frames = load_data(dump_folder, dump_id, control_task_type, scalar_mixin=False)
 

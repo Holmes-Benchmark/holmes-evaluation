@@ -26,8 +26,8 @@ def get_hyperparameters(hyperparameters:Dict):
 
 
 @click.command()
-@click.option('--config_file_path', type=str, default='../holmes-datasets/zorro-quantifiers-superlative/config-none.yaml')
-@click.option('--model_name', type=str, default="bert-base-uncased")
+@click.option('--config_file_path', type=str, default='../data/flash-holmes/zorro-quantifiers-superlative/config-none.yaml')
+@click.option('--model_name', type=str, default="bbunzeck/baby_llama")
 @click.option('--encoding', type=str, default="full")
 @click.option('--seeds', type=str, default="0,1,2,3,4")
 @click.option('--num_hidden_layers', type=str, default="0")

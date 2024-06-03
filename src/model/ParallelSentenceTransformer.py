@@ -9,6 +9,7 @@ from sentence_transformers import SentenceTransformer
 from sentence_transformers.util import batch_to_device
 from torch import Tensor
 from tqdm.autonotebook import trange
+from transformers import LlamaModel
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +70,9 @@ class ParallelSentenceTransformer(SentenceTransformer):
             sentences_batch = sentences_sorted[start_index:start_index+batch_size]
             features = self.tokenize(sentences_batch)
             features = batch_to_device(features, device)
+
+            if type(self[0].auto_model) == LlamaModel:
+                del features["token_type_ids"]
 
             with torch.no_grad():
                 out_features = self.forward(features)

@@ -71,7 +71,7 @@ class ParallelSentenceTransformer(SentenceTransformer):
             features = self.tokenize(sentences_batch)
             features = batch_to_device(features, device)
 
-            if type(self[0].auto_model) == LlamaModel:
+            if type(self[0].auto_model) == LlamaModel and "token_type_ids" in features:
                 del features["token_type_ids"]
 
             with torch.no_grad():

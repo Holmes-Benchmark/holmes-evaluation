@@ -17,10 +17,10 @@ def clean_session():
 
 
 @ray.remote(num_gpus=1/24)
-def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix):
-    run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix)
+def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, probe_name=None):
+    run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, probe_name)
 
-def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix):
+def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, probe_name=None):
     hyperparameter = params["hyperparameter"]
 
     hyperparameter["control_task_type"] = params["control_task_type"].name
@@ -32,7 +32,8 @@ def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump
 
     hyperparameter["input_dim"] = params["input_dim"]
 
-    probe_name = params["probes_samples_path"].split("/")[-2]
+    if probe_name is None:
+        probe_name = params["probes_samples_path"].split("/")[-2]
 
     if params["probe_type"] == "linear":
         WORKER_CLASS = GeneralProbeWorker

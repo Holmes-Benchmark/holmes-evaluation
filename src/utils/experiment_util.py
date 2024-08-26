@@ -1,7 +1,10 @@
 import torch
 import transformers
+import wandb
 from tokenizers import Tokenizer
 from transformers import SLOW_TO_FAST_CONVERTERS, PreTrainedTokenizer
+from wandb.apis.public import Runs
+
 
 def convert_slow_tokenizer(transformer_tokenizer) -> Tokenizer:
     """
@@ -71,3 +74,29 @@ def init_random_weights(module: torch.nn.Module) -> None:
         print()
         #self._total += module.weight.size(0)
         #self._total += module.bias.size(0)
+
+
+def check_wandb_run(config, experiment_name):
+    api = wandb.Api()
+
+    lookup_filter = {
+        "config.model_name": config["model_name"],
+        "config.control_task_type": config["control_task_type"],
+        "config.probe_task_type": config["probe_task_type"],
+        "config.seed": config["seed"],
+        "config.fold": config["fold"],
+        "config.encoding": config["encoding"],
+        "config.sample_size": config["sample_size"],
+        "config.probe_type": config["probe_type"],
+        "config.batch_size":  config["batch_size"],
+    }
+
+    runs = list(Runs(entity="tresiwald", project=experiment_name, filters=lookup_filter, client=api.client))
+
+    filtered_runs = [
+        run
+        for run in runs
+        if run.state == "finished"
+    ]
+
+    return len(filtered_runs) > 1

@@ -26,23 +26,24 @@ def get_hyperparameters(hyperparameters:Dict):
 
 
 @click.command()
-@click.option('--config_file_path', type=str, default='../holmes-datasets/zorro-quantifiers-superlative/config-none.yaml')
-@click.option('--model_name', type=str, default="bert-base-uncased")
+@click.option('--config_file_path', type=str, default='../data/flash-holmes/zorro-quantifiers-superlative/config-none.yaml')
+@click.option('--model_name', type=str, default="bbunzeck/baby_llama")
 @click.option('--model_precision', type=str, default="full")
 @click.option('--seeds', type=str, default="0,1,2,3,4")
 @click.option('--num_hidden_layers', type=str, default="0")
 @click.option('--batch_size', type=int, default=16)
 @click.option('--run_probe', type=bool, default=True)
 @click.option('--run_mdl_probe', type=bool, default=True)
-@click.option('--project_prefix', type=str, default="")
+@click.option('--project_prefix', type=str, default="dev")
 @click.option('--dump_preds', is_flag=True, default=False)
 @click.option('--force', is_flag=True, default=False)
 @click.option('--dump_folder', type=str, default="../dumps")
 @click.option('--result_folder', type=str, default="../results")
+@click.option('--logging', type=str, default="wandb")
 def main(
         config_file_path, model_name, model_precision, seeds, num_hidden_layers,
         batch_size, run_probe, run_mdl_probe, project_prefix, dump_preds, force,
-        dump_folder, result_folder
+        dump_folder, result_folder, logging
 ):
     base_path = "/".join(config_file_path.split("/")[:-1]) + "/samples.csv"
 
@@ -52,7 +53,7 @@ def main(
     control_task_type = CONTROL_TASK_TYPES[config["control_task_type"]]
 
     base_config = load_base_config(
-        config=config, encoding=encoding,
+        config=config, encoding=model_precision,
         seeds=seeds, num_hidden_layers=num_hidden_layers,
         model_name=model_name, batch_size=batch_size,
         control_task_type=control_task_type, project_prefix=project_prefix
@@ -96,7 +97,7 @@ def main(
                     **config
                 }
 
-                default_params.append((param_ele, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix))
+                default_params.append((param_ele, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, logging))
 
 
     for param in default_params:

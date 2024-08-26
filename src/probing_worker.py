@@ -13,11 +13,12 @@ from torch.utils.data import Subset
 
 from model.probing_model import LinearProbingModel
 from utils.data_loading import ProbingDataset, get_unique_inputs
+from utils.experiment_util import check_wandb_run
 from utils.seed_util import seed_all
 
 class ProbeWorker:
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str):
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str):
         self.hyperparameter = hyperparameter
         seed_all(self.hyperparameter["seed"])
 
@@ -36,6 +37,7 @@ class ProbeWorker:
         self.train_dataset = train_dataset
         self.dev_dataset = dev_dataset
         self.test_dataset = test_dataset
+        self.logging = logging
 
         self.hyperparameter["gpus"] = self.gpus
         self.hyperparameter["device"] = self.device
@@ -54,24 +56,34 @@ class ProbeWorker:
         return run_id
 
     def get_logger(self):
-
-        if self.project_prefix != "":
+        if self.logging == "local" and self.project_prefix != "":
             return CSVLogger(save_dir=self.result_folder, name=f"{self.project_prefix}-{self.probe_name}/{self.get_local_run_id()}")
-        else:
+        elif self.logging == "local":
             return CSVLogger(save_dir=self.result_folder, name=f"{self.probe_name}/{self.get_local_run_id()}")
+        elif self.logging == "wandb" and self.project_prefix != "":
+            return WandbLogger(project=self.project_prefix + "-" + self.probe_name)
+        else:
+            return WandbLogger(project=self.probe_name)
 
 
     def mark_run_as_done(self, logger):
-        os.system(f"mv {logger.log_dir} {logger.root_dir}/done")
+        if self.logging == "wandb":
+            logger.experiment.config["result"] = "done"
+            logger.experiment.finish()
+        elif self.logging == "local":
+            os.system(f"mv {logger.log_dir} {logger.root_dir}/done")
 
     def get_unique_inputs(self, dataset):
         return dataset.unique_inputs
-
+    def log_params(self, logger, params):
+        if self.logging == "wandb":
+            for k, v in params.items():
+                logger.experiment.config[k] = v
 
 class GeneralProbeWorker(ProbeWorker):
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str):
-        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder)
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str):
+        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder, logging)
         self.probing_model = LinearProbingModel
 
 
@@ -116,11 +128,17 @@ class GeneralProbeWorker(ProbeWorker):
 
         logger = self.get_logger()
 
-        log_dir = logger.log_dir
+        if self.logging == "local":
+            log_dir = logger.log_dir
+            if os.path.exists(f"{logger.root_dir}/done") and not self.force:
+                print(f"Already done at {logger.root_dir}/done")
+                return "Done"
+        else:
+            if check_wandb_run(self.hyperparameter, logger.experiment.project) and not self.force:
+                print(f"Already done.")
+                return "Done"
 
-        if os.path.exists(f"{logger.root_dir}/done") and not self.force:
-            print(f"Already done at {logger.root_dir}/done")
-            return "Done"
+            log_dir = f"{self.result_folder}/{logger.experiment.id}"
 
         os.system("mkdir -p " + log_dir)
 
@@ -139,8 +157,8 @@ class GeneralProbeWorker(ProbeWorker):
 
 class MDLProbeWorker(GeneralProbeWorker):
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str):
-        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder)
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str):
+        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder, logging)
 
 
 
@@ -350,7 +368,6 @@ class MDLProbeWorker(GeneralProbeWorker):
     def train_run(self, log_dir, logger):
 
         batch_size = self.hyperparameter["batch_size"]
-
 
         unique_inputs = self.train_dataset.unique_inputs
 

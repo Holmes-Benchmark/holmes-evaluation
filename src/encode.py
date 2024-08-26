@@ -1,3 +1,4 @@
+import glob
 import os.path
 import traceback
 
@@ -38,10 +39,13 @@ def main(
 
     dump_path = f"{dump_folder}/{dump_id}.pickle"
 
+    result_path = f'{"/".join(config_file_path.replace("data", "results").split("/")[:-1])}/{model_name}/{model_precision}/**/done/metrics.csv'
+    print(result_path)
+    print(glob.glob(result_path))
+
     if os.path.exists(dump_path) and not force:
         print(f"Already encoded at {dump_path}")
         return
-
 
     dump_data(probe_frame, probe_task_type, control_task_type, encoding_batch_size, dump_path,
                                model_name, model_precision, scalar_mixin=False)

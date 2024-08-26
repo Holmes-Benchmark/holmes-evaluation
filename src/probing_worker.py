@@ -134,9 +134,9 @@ class GeneralProbeWorker(ProbeWorker):
                 print(f"Already done at {logger.root_dir}/done")
                 return "Done"
         else:
-            if check_wandb_run(self.hyperparameter, logger.experiment.project) and not self.force:
-                print(f"Already done.")
-                return "Done"
+            #if check_wandb_run(self.hyperparameter, logger.experiment.project) and not self.force:
+            #    print(f"Already done.")
+            #    return "Done"
 
             log_dir = f"{self.result_folder}/{logger.experiment.id}"
 

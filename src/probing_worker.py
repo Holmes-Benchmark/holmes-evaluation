@@ -140,6 +140,8 @@ class GeneralProbeWorker(ProbeWorker):
 
             log_dir = f"{self.result_folder}/{logger.experiment.id}"
             print(logger)
+            print(logger.experiment)
+            print(logger.experiment.id)
             print(log_dir)
 
         os.system("mkdir -p " + log_dir)

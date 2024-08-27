@@ -103,7 +103,7 @@ class GeneralProbeWorker(ProbeWorker):
         probing_model.hyperparameter["warmup_steps"] = self.hyperparameter["warmup_steps"] = self.hyperparameter["training_steps"] * self.hyperparameter["warmup_rate"]
 
         trainer = Trainer(
-            logger=logger, max_epochs=20, gpus=self.gpus, precision=self.precision,
+            logger=logger, max_epochs=20, accelerator="auto", precision=self.precision,
             num_sanity_val_steps=0, deterministic=False,
             callbacks=[ModelCheckpoint(monitor="val loss",  mode="min", dirpath=log_dir), EarlyStopping(monitor="val loss",  mode="min", patience=5)]
         )

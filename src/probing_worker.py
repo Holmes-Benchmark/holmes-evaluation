@@ -103,7 +103,7 @@ class GeneralProbeWorker(ProbeWorker):
         probing_model.hyperparameter["warmup_steps"] = self.hyperparameter["warmup_steps"] = self.hyperparameter["training_steps"] * self.hyperparameter["warmup_rate"]
 
         trainer = Trainer(
-            logger=logger, max_epochs=20, accelerator="auto", devices=0, precision=self.precision,
+            logger=logger, max_epochs=20, accelerator="auto", devices=1, precision=self.precision,
             num_sanity_val_steps=0, deterministic=False,
             callbacks=[ModelCheckpoint(monitor="val loss",  mode="min", dirpath=log_dir), EarlyStopping(monitor="val loss",  mode="min", patience=5)]
         )
@@ -190,7 +190,7 @@ class MDLProbeWorker(GeneralProbeWorker):
         probing_model.hyperparameter["warmup_steps"] = self.hyperparameter["warmup_steps"] = self.hyperparameter["training_steps"] * self.hyperparameter["warmup_rate"]
 
         trainer = Trainer(
-            logger=logger, max_epochs=20, accelerator="auto", devices=0, precision=self.precision,
+            logger=logger, max_epochs=20, accelerator="auto", devices=1, precision=self.precision,
             num_sanity_val_steps=0, deterministic=False, gradient_clip_val=1.0,
             callbacks=[ModelCheckpoint(monitor="val_ref",  mode="max", dirpath=log_dir), EarlyStopping(monitor="val_ref",  mode="max", patience=4)]
         )
@@ -387,7 +387,7 @@ class MDLProbeWorker(GeneralProbeWorker):
         probing_model.hyperparameter["warmup_steps"] = self.hyperparameter["warmup_steps"] = self.hyperparameter["training_steps"] * self.hyperparameter["warmup_rate"]
 
         trainer = Trainer(
-            logger=logger, max_epochs=20, accelerator="auto", devices=0, precision=self.precision,
+            logger=logger, max_epochs=20, accelerator="auto", devices=1, precision=self.precision,
             num_sanity_val_steps=0, deterministic=False, gradient_clip_val=1.0,
             callbacks=[ModelCheckpoint(monitor="val_ref",  mode="max", dirpath=log_dir), EarlyStopping(monitor="val_ref",  mode="max", patience=5)]
         )

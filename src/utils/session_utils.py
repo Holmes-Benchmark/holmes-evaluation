@@ -23,24 +23,16 @@ def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, 
 def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, logging="local", probe_name=None):
     hyperparameter = params["hyperparameter"]
 
-    hyperparameter["control_task_type"] = params["control_task_type"].name
-    hyperparameter["probe_task_type"] = params["probe_task_type"].name
-    hyperparameter["num_labels"] = params["num_labels"]
-    hyperparameter["model_name"] = params["model_name"]
-    hyperparameter["probe_type"] = params["probe_type"]
-    hyperparameter["sample_size"] = params["sample_size"]
-
     hyperparameter["input_dim"] = params["input_dim"]
 
     if probe_name is None:
         probe_name = params["probes_samples_path"].split("/")[-2]
 
-    if params["probe_type"] == "linear":
+    if hyperparameter["probe_type"] == "linear":
         WORKER_CLASS = GeneralProbeWorker
-    elif params["probe_type"] == "linear_mdl":
+    elif hyperparameter["probe_type"] == "linear_mdl":
         WORKER_CLASS = MDLProbeWorker
 
-    hyperparameter["encoding"] = params["encoding"]
 
     worker = WORKER_CLASS(
         train_dataset=train_dataset, dev_dataset=dev_dataset, test_dataset=test_dataset,
@@ -50,4 +42,3 @@ def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump
     )
 
     worker.run_fold()
-

@@ -110,7 +110,7 @@ class GeneralProbeWorker(ProbeWorker):
 
         trainer.fit(model=probing_model, train_dataloaders=[train_dataloader], val_dataloaders=[dev_dataloader])
 
-        trainer.test(ckpt_path="best", test_dataloaders=[test_dataloader])
+        trainer.test(ckpt_path="best", dataloaders=[test_dataloader])
 
         print("pred done")
 
@@ -186,12 +186,12 @@ class MDLProbeWorker(GeneralProbeWorker):
         probing_model.hyperparameter["warmup_steps"] = self.hyperparameter["warmup_steps"] = self.hyperparameter["training_steps"] * self.hyperparameter["warmup_rate"]
 
         trainer = Trainer(
-            logger=logger, max_epochs=20, gpus=self.gpus, precision=self.precision,
+            logger=logger, max_epochs=20, accelerator="auto", precision=self.precision,
             num_sanity_val_steps=0, deterministic=False, gradient_clip_val=1.0,
             callbacks=[ModelCheckpoint(monitor="val_ref",  mode="max", dirpath=log_dir), EarlyStopping(monitor="val_ref",  mode="max", patience=4)]
         )
 
-        trainer.fit(model=probing_model, train_dataloader=train_dataloader, val_dataloaders=[dev_dataloader])
+        trainer.fit(model=probing_model, train_dataloaders=[train_dataloader], val_dataloaders=[dev_dataloader])
 
         dev_metrics = trainer.validate(ckpt_path="best", dataloaders=[dev_online_dataloader])
 
@@ -205,7 +205,7 @@ class MDLProbeWorker(GeneralProbeWorker):
         else:
             dev_unseen_losses = []
 
-        test_metrics = trainer.test(ckpt_path="best", test_dataloaders=[test_dataloader])[0]
+        test_metrics = trainer.test(ckpt_path="best", dataloaders=[test_dataloader])[0]
 
         if len(test_seen_indices) > 0:
             test_seen_preds = probing_model.test_raw_preds[test_seen_indices]
@@ -221,12 +221,12 @@ class MDLProbeWorker(GeneralProbeWorker):
 
         for name, func in probing_model.metrics.items():
             if len(test_seen_preds):
-                test_metrics["seen " + name] = float(func(test_seen_preds, test_seen_labels))
+                test_metrics["seen " + name] = float(func(test_seen_preds.argmax(dim=1), test_seen_labels))
             else:
                 test_metrics["seen " + name] = -1
 
             if len(test_unseen_preds):
-                test_metrics["unseen " + name] = float(func(test_unseen_preds, test_unseen_labels))
+                test_metrics["unseen " + name] = float(func(test_unseen_preds.argmax(dim=1), test_unseen_labels))
             else:
                 test_metrics["unseen " + name] = -1
 
@@ -383,14 +383,14 @@ class MDLProbeWorker(GeneralProbeWorker):
         probing_model.hyperparameter["warmup_steps"] = self.hyperparameter["warmup_steps"] = self.hyperparameter["training_steps"] * self.hyperparameter["warmup_rate"]
 
         trainer = Trainer(
-            logger=logger, max_epochs=20, gpus=self.gpus, precision=self.precision,
+            logger=logger, max_epochs=20, accelerator="auto", precision=self.precision,
             num_sanity_val_steps=0, deterministic=False, gradient_clip_val=1.0,
             callbacks=[ModelCheckpoint(monitor="val_ref",  mode="max", dirpath=log_dir), EarlyStopping(monitor="val_ref",  mode="max", patience=5)]
         )
 
-        trainer.fit(model=probing_model, train_dataloader=train_dataloader, val_dataloaders=[dev_dataloader])
+        trainer.fit(model=probing_model, train_dataloaders=[train_dataloader], val_dataloaders=[dev_dataloader])
 
-        trainer.test(ckpt_path="best", test_dataloaders=[test_dataloader])
+        trainer.test(ckpt_path="best", dataloaders=[test_dataloader])
 
         uniform_code_length, minimum_description_length, compression, seen_compression, unseen_compression, fraction_losses, fraction_lengths, collected_test_metrics = self.run_mdl_tasks(
             fractions=[1/1024, 1/512, 1/256, 1/128, 1/64, 1/32, 1/16, 1/8, 1/4, 1/2],

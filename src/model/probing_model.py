@@ -16,6 +16,11 @@ class SkeletonProbingModel(LightningModule):
     def __init__(self, hyperparameter, unique_inputs={}):
         super().__init__()
         self.hyperparameter = hyperparameter
+
+        self.train_step_outputs = []
+        self.dev_step_outputs = []
+        self.test_step_outputs = []
+
         if self.hyperparameter["num_labels"] == 1:
             self.mean_loss = torch.nn.SmoothL1Loss()
             self.loss = torch.nn.SmoothL1Loss(reduction='none')
@@ -25,9 +30,14 @@ class SkeletonProbingModel(LightningModule):
         else:
             self.mean_loss = torch.nn.CrossEntropyLoss()
             self.loss = torch.nn.CrossEntropyLoss(reduction='none')
+
+            task_type = "binary" if self.hyperparameter["num_labels"] == 2 else "multiclass"
+
             self.metrics = {
-                "acc": torchmetrics.Accuracy(),
-                "f1": torchmetrics.F1(average="macro", num_classes=self.hyperparameter["num_labels"]),
+                "acc": torchmetrics.Accuracy(task=task_type),
+                "f1": torchmetrics.F1Score(
+                    average="macro", num_classes=self.hyperparameter["num_labels"], task=task_type
+                ),
             }
             if self.hyperparameter["num_labels"] > 2:
                 self.f1_all = torchmetrics.F1(average="none", num_classes=self.hyperparameter["num_labels"])
@@ -103,6 +113,7 @@ class SkeletonProbingModel(LightningModule):
             losses = losses.squeeze(1)
 
         self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
+        self.dev_step_outputs.append([losses, pred, y])
         return losses, pred, y
 
     def run_test_step(self, batch, prefix):
@@ -119,10 +130,11 @@ class SkeletonProbingModel(LightningModule):
             losses = losses.squeeze(1)
 
         #self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
+        self.test_step_outputs.append([losses, pred, y, seen_indices])
         return losses, pred, y, seen_indices
 
     def training_step(self, batch, batch_index):
-        x, y = batch
+        x, y = batch[0]
         x = x.to(self.device)
         y = y.to(self.device)
         pred = self(x)
@@ -131,6 +143,9 @@ class SkeletonProbingModel(LightningModule):
             loss = self.mean_loss(pred, y)
         else:
             loss = self.mean_loss(pred, y.unsqueeze(dim=1))
+
+        self.train_step_outputs.append(loss)
+
         return loss
 
     def on_train_start(self):
@@ -145,20 +160,21 @@ class SkeletonProbingModel(LightningModule):
         return self.run_test_step(batch, "test")
 
 
-    def training_epoch_end(self, losses):
-        self.log("train loss", losses[0]["loss"])
+    def on_train_epoch_end(self):
+        self.log("train loss", torch.tensor(self.train_step_outputs).mean())
+        self.train_step_outputs.clear()
 
-    def test_epoch_end(self, test_step_outputs):
+    def on_test_epoch_end(self):
 
-        losses = [ele[0] for ele in test_step_outputs]
+        losses = [ele[0] for ele in self.test_step_outputs]
         losses = torch.concat(losses)
         losses_mean = losses.mean()
         losses_sum = losses.sum()
 
-        preds = [ele[1] for ele in test_step_outputs]
-        truths = [ele[2] for ele in test_step_outputs]
+        preds = [ele[1] for ele in self.test_step_outputs]
+        truths = [ele[2] for ele in self.test_step_outputs]
 
-        seen_indices = [ele[3] for ele in test_step_outputs]
+        seen_indices = [ele[3] for ele in self.test_step_outputs]
 
         pred_labels = torch.cat(preds).detach().cpu()
         truth_labels = torch.cat(truths).detach().cpu()
@@ -177,8 +193,10 @@ class SkeletonProbingModel(LightningModule):
             for metric, func in self.metrics.items():
                 #if metric == "pearson":
                 #    pred_labels = pred_labels.squeeze(dim=1)
-
-                metric_result = func(preds, labels)
+                if self.hyperparameter["num_labels"] > 1:
+                    metric_result = func(pred_labels.argmax(1), truth_labels)
+                else:
+                    metric_result = func(pred_labels, truth_labels)
                 metric_results[set_name + " test " + metric] = float(metric_result)
 
             if self.hyperparameter["num_labels"] > 2:
@@ -205,9 +223,11 @@ class SkeletonProbingModel(LightningModule):
             self.test_losses = losses.detach().cpu().double().numpy()
             self.test_seen_indices = seen_indices
 
+        self.test_step_outputs.clear()
 
-    def validation_epoch_end(self, validation_step_outputs):
-        self.process_validation_results(validation_step_outputs)
+    def on_validation_epoch_end(self):
+        self.process_validation_results(self.dev_step_outputs)
+        self.dev_step_outputs.clear()
 
     def process_validation_results(self, validation_step_outputs):
         losses = [ele[0] for ele in validation_step_outputs]
@@ -225,7 +245,10 @@ class SkeletonProbingModel(LightningModule):
 
         for metric, func in self.metrics.items():
 
-            metric_result = func(pred_labels, truth_labels)
+            if self.hyperparameter["num_labels"] > 1:
+                metric_result = func(pred_labels.argmax(1), truth_labels)
+            else:
+                metric_result = func(pred_labels, truth_labels)
 
             metric_results[metric] = metric_result
 

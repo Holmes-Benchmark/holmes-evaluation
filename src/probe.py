@@ -89,6 +89,10 @@ def main(
 
             for hyperparameter in hyperparameters:
                 hyperparameter["fold"] = fold
+                hyperparameter["probe_type"] = config["probe_type"]
+                hyperparameter["encoding"] = model_precision
+                hyperparameter["num_labels"] = config["num_labels"]
+
                 param_ele = {
                     "hyperparameter": hyperparameter,
                     "input_dim": input_dim,

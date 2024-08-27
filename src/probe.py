@@ -35,7 +35,7 @@ def get_hyperparameters(hyperparameters:Dict):
 @click.option('--run_probe', type=bool, default=True)
 @click.option('--run_mdl_probe', type=bool, default=True)
 @click.option('--project_prefix', type=str, default="dev")
-@click.option('--dump_preds', is_flag=True, default=False)
+@click.option('--dump_preds', is_flag=True, default=True)
 @click.option('--force', is_flag=True, default=False)
 @click.option('--dump_folder', type=str, default="../dumps")
 @click.option('--result_folder', type=str, default="../results")

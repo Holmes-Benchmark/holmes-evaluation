@@ -120,6 +120,7 @@ class GeneralProbeWorker(ProbeWorker):
         ]
 
         test_prediction_frame = pandas.DataFrame(test_predictions)
+        test_prediction_frame.columns = ["instance", "pred", "label", "loss", "seen"]
 
         return test_prediction_frame, probing_model
 
@@ -139,10 +140,6 @@ class GeneralProbeWorker(ProbeWorker):
             #    return "Done"
 
             log_dir = f"{self.result_folder}/{logger.experiment.id}"
-            print(logger)
-            print(logger.experiment)
-            print(logger.experiment.id)
-            print(log_dir)
 
         os.system("mkdir -p " + log_dir)
 
@@ -416,6 +413,7 @@ class MDLProbeWorker(GeneralProbeWorker):
         ]
 
         test_prediction_frame = pandas.DataFrame(test_predictions)
+        test_prediction_frame.columns = ["instance", "pred", "label", "loss", "seen"]
 
         return test_prediction_frame, probing_model
 

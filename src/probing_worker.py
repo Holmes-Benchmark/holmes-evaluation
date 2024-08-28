@@ -18,7 +18,7 @@ from utils.seed_util import seed_all
 
 class ProbeWorker:
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str,, logging:str, cache_folder:str = None):
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str, cache_folder:str = None):
         self.hyperparameter = hyperparameter
         seed_all(self.hyperparameter["seed"])
 

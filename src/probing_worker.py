@@ -150,6 +150,8 @@ class GeneralProbeWorker(ProbeWorker):
         os.system("mkdir -p " + log_dir)
 
         self.hyperparameter["dump_id"] = log_dir
+        self.hyperparameter["cache_folder"] = self.cache_folder
+        self.hyperparameter["results_folder"] = self.results_folder
 
         prediction_frame, probing_model = self.train_run(log_dir=log_dir, logger=logger)
 

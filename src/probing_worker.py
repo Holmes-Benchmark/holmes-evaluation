@@ -63,8 +63,13 @@ class ProbeWorker:
             return CSVLogger(save_dir=self.result_folder, name=f"{self.probe_name}/{self.get_local_run_id()}")
         elif self.logging == "wandb" and self.project_prefix != "":
             return WandbLogger(project=self.project_prefix + "-" + self.probe_name, dir=self.cache_folder)
+
+            logger.experiment.config["result_folder"] = self.result_folder
+            logger.experiment.config["cache_folder"] = self.cache_folder
         else:
             return WandbLogger(project=self.probe_name, dir=self.cache_folder)
+            logger.experiment.config["result_folder"] = self.result_folder
+            logger.experiment.config["cache_folder"] = self.cache_folder
 
 
     def mark_run_as_done(self, logger):

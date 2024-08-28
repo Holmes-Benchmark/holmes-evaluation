@@ -38,7 +38,7 @@ def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump
         train_dataset=train_dataset, dev_dataset=dev_dataset, test_dataset=test_dataset,
         hyperparameter=hyperparameter, project_prefix=project_prefix, n_layers=params["n_layers"],
         probe_name=probe_name, dump_preds=dump_preds, force=force, result_folder=params["result_folder"],
-        logging=logging
+        logging=logging, cache_folder=params.get(params["cache_folder"], None)
     )
 
     worker.run_fold()

@@ -18,12 +18,13 @@ from utils.seed_util import seed_all
 
 class ProbeWorker:
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str):
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str,, logging:str, cache_folder:str = None):
         self.hyperparameter = hyperparameter
         seed_all(self.hyperparameter["seed"])
 
         self.dump_preds = dump_preds
         self.result_folder = result_folder
+        self.cache_folder = cache_folder
         self.force = force
         self.encoding = self.hyperparameter["encoding"]
         self.probe_name = probe_name
@@ -61,9 +62,9 @@ class ProbeWorker:
         elif self.logging == "local":
             return CSVLogger(save_dir=self.result_folder, name=f"{self.probe_name}/{self.get_local_run_id()}")
         elif self.logging == "wandb" and self.project_prefix != "":
-            return WandbLogger(project=self.project_prefix + "-" + self.probe_name)
+            return WandbLogger(project=self.project_prefix + "-" + self.probe_name, dir=self.cache_folder)
         else:
-            return WandbLogger(project=self.probe_name)
+            return WandbLogger(project=self.probe_name, dir=self.cache_folder)
 
 
     def mark_run_as_done(self, logger):
@@ -82,8 +83,8 @@ class ProbeWorker:
 
 class GeneralProbeWorker(ProbeWorker):
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str):
-        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder, logging)
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str, cache_folder:str = None):
+        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder, logging, cache_folder)
         self.probing_model = LinearProbingModel
 
 
@@ -158,8 +159,8 @@ class GeneralProbeWorker(ProbeWorker):
 
 class MDLProbeWorker(GeneralProbeWorker):
 
-    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str):
-        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder, logging)
+    def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str, cache_folder:str = None):
+        super().__init__(hyperparameter, train_dataset, dev_dataset, test_dataset, n_layers, probe_name, project_prefix, dump_preds, force, result_folder, logging, cache_folder)
 
 
 

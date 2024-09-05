@@ -25,7 +25,9 @@ class SkeletonProbingModel(LightningModule):
             self.mean_loss = torch.nn.SmoothL1Loss()
             self.loss = torch.nn.SmoothL1Loss(reduction='none')
             self.metrics = {
-                "pearson": torchmetrics.PearsonCorrCoef()
+                "pearson": torchmetrics.PearsonCorrCoef(),
+                "error": torchmetrics.MeanSquaredError()
+
             }
         else:
             self.mean_loss = torch.nn.CrossEntropyLoss()

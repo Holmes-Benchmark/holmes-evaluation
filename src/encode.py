@@ -13,7 +13,7 @@ from utils.session_utils import clean_session
 
 
 @click.command()
-@click.option('--config_file_path', type=str, default='../data/flash-holmes/zorro-quantifiers-superlative/config-none.yaml')
+@click.option('--config_file_path', type=str, default='../data/flash-holmes/protoroles-change_of_state/config-none.yaml')
 @click.option('--model_name', type=str, default="bbunzeck/baby_llama")
 @click.option('--encoding_batch_size', type=int, default=10)
 @click.option('--model_precision', type=str, default="full")

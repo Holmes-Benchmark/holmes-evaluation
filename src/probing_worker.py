@@ -111,7 +111,7 @@ class GeneralProbeWorker(ProbeWorker):
         trainer = Trainer(
             logger=logger, max_epochs=20, accelerator="auto", devices=1, precision=self.precision,
             num_sanity_val_steps=0, deterministic=False,
-            callbacks=[ModelCheckpoint(monitor="val loss",  mode="min", dirpath=log_dir), EarlyStopping(monitor="val loss",  mode="min", patience=5)]
+            callbacks=[ModelCheckpoint(monitor="val loss",  mode="min", dirpath=log_dir), EarlyStopping(monitor="val loss",  mode="min", patience=10)]
         )
 
         trainer.fit(model=probing_model, train_dataloaders=[train_dataloader], val_dataloaders=[dev_dataloader])

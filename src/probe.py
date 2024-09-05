@@ -26,7 +26,7 @@ def get_hyperparameters(hyperparameters:Dict):
 
 
 @click.command()
-@click.option('--config_file_path', type=str, default='../data/flash-holmes/zorro-quantifiers-superlative/config-none.yaml')
+@click.option('--config_file_path', type=str, default='../data/flash-holmes/protoroles-change_of_state/config-none.yaml')
 @click.option('--model_name', type=str, default="bbunzeck/baby_llama")
 @click.option('--model_precision', type=str, default="full")
 @click.option('--seeds', type=str, default="0,1,2,3,4")
@@ -98,6 +98,7 @@ def main(
                     "input_dim": input_dim,
                     "n_layers": 1,
                     "result_folder": result_folder,
+                    "cache_folder": "cache",
                     **config
                 }
 

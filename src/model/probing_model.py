@@ -188,11 +188,14 @@ class SkeletonProbingModel(LightningModule):
         lower_quantile_indices = (truth_labels < lower_quantile).nonzero().squeeze()
         upper_quantile_indices = (truth_labels > upper_quantile).nonzero().squeeze()
 
+        middle_quantile_indices = (truth_labels > lower_quantile & truth_labels < upper_quantile).nonzero().squeeze()
+
         for set_name, preds, labels in [
             ("full", pred_labels, truth_labels),
             ("seen",  pred_labels[seen_indices], truth_labels[seen_indices]),
             ("unseen",  pred_labels[unseen_indices], truth_labels[unseen_indices]),
             ("lower",  pred_labels[lower_quantile_indices], truth_labels[lower_quantile_indices]),
+            ("middle",  pred_labels[middle_quantile_indices], truth_labels[middle_quantile_indices]),
             ("upper",  pred_labels[upper_quantile_indices], truth_labels[upper_quantile_indices]),
         ]:
             if len(preds) == 0:

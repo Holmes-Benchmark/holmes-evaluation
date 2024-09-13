@@ -35,7 +35,7 @@ class SkeletonProbingModel(LightningModule):
             task_type = "binary" if self.hyperparameter["num_labels"] == 2 else "multiclass"
 
             self.metrics = {
-                "acc": torchmetrics.Accuracy(task=task_type),
+                "acc": torchmetrics.Accuracy(task=task_type, num_classes=self.hyperparameter["num_labels"]),
                 "f1": torchmetrics.F1Score(
                     average="macro", num_classes=self.hyperparameter["num_labels"], task=task_type
                 ),

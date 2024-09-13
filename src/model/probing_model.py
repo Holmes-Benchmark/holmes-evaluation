@@ -41,8 +41,8 @@ class SkeletonProbingModel(LightningModule):
                 ),
             }
             if self.hyperparameter["num_labels"] > 2:
-                self.f1_all = torchmetrics.F1(average="none", num_classes=self.hyperparameter["num_labels"])
-                self.acc_all = torchmetrics.Accuracy(average="none", num_classes=self.hyperparameter["num_labels"])
+                self.f1_all = torchmetrics.F1Score(average="none", num_classes=self.hyperparameter["num_labels"], task=task_type)
+                self.acc_all = torchmetrics.Accuracy(average="none", num_classes=self.hyperparameter["num_labels"], task=task_type)
 
         self.best_val_metrics = defaultdict(lambda: -1)
         self.best_test_metrics = defaultdict(lambda: -1)

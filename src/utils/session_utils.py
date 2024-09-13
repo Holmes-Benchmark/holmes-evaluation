@@ -16,7 +16,7 @@ def clean_session():
 
 
 
-@ray.remote(num_gpus=1/24, num_cpus=3)
+@ray.remote(num_gpus=1/24, num_cpus=1)
 def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix,  logging="local", probe_name=None):
     run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, logging, probe_name)
 

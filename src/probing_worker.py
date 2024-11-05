@@ -216,29 +216,6 @@ class MDLProbeWorker(GeneralProbeWorker):
 
         test_metrics = trainer.test(ckpt_path="best", dataloaders=[test_dataloader])[0]
 
-        if len(test_seen_indices) > 0:
-            test_seen_preds = probing_model.test_raw_preds[test_seen_indices]
-            test_seen_labels = probing_model.test_labels[test_seen_indices]
-        else:
-            test_seen_preds = test_seen_labels = []
-
-        if len(test_unseen_indices) > 0:
-            test_unseen_preds = probing_model.test_raw_preds[test_unseen_indices]
-            test_unseen_labels = probing_model.test_labels[test_unseen_indices]
-        else:
-            test_unseen_preds = test_unseen_labels = []
-
-        for name, func in probing_model.metrics.items():
-            if len(test_seen_preds):
-                test_metrics["seen " + name] = float(func(test_seen_preds.argmax(dim=1), test_seen_labels))
-            else:
-                test_metrics["seen " + name] = -1
-
-            if len(test_unseen_preds):
-                test_metrics["unseen " + name] = float(func(test_unseen_preds.argmax(dim=1), test_unseen_labels))
-            else:
-                test_metrics["unseen " + name] = -1
-
 
         summed_loss = dev_metrics[0]["val loss sum"]
 

@@ -20,6 +20,9 @@ def clean_session():
 def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix,  logging="local", probe_name=None):
     run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, logging, probe_name)
 
+def run_probe_with_params_pool(args):
+    run_probe_with_params(*args)
+
 def run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, logging="local", probe_name=None):
     hyperparameter = params["hyperparameter"]
 

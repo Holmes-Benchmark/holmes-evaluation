@@ -113,7 +113,7 @@ class SkeletonProbingModel(LightningModule):
             pred = pred.squeeze(dim=1)
             losses = losses.squeeze(1)
 
-        self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
+        #self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
         self.dev_step_outputs.append([losses, pred, y])
         return losses, pred, y
 
@@ -162,7 +162,7 @@ class SkeletonProbingModel(LightningModule):
 
 
     def on_train_epoch_end(self):
-        self.log("train loss", torch.tensor(self.train_step_outputs).mean())
+        #self.log("train loss", torch.tensor(self.train_step_outputs).mean())
         self.train_step_outputs.clear()
 
     def on_test_epoch_end(self):
@@ -249,7 +249,7 @@ class SkeletonProbingModel(LightningModule):
         self.test_step_outputs.clear()
 
     def on_validation_epoch_end(self):
-        self.process_validation_results(self.dev_step_outputs)
+        #self.process_validation_results(self.dev_step_outputs)
         self.dev_step_outputs.clear()
 
     def process_validation_results(self, validation_step_outputs):

@@ -113,7 +113,7 @@ class SkeletonProbingModel(LightningModule):
             pred = pred.squeeze(dim=1)
             losses = losses.squeeze(1)
 
-        #self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
+        self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
         self.dev_step_outputs.append([losses, pred, y])
         return losses, pred, y
 
@@ -154,7 +154,7 @@ class SkeletonProbingModel(LightningModule):
             self.logger.log_hyperparams(self.hyperparameter)
 
     def validation_step(self, batch, batch_index):
-       # set = "val" if dataloader_index == 0 else "test"
+        # set = "val" if dataloader_index == 0 else "test"
         return self.run_val_step(batch, "val")
 
     def test_step(self, batch, batch_index):
@@ -249,7 +249,7 @@ class SkeletonProbingModel(LightningModule):
         self.test_step_outputs.clear()
 
     def on_validation_epoch_end(self):
-        self.process_validation_results(self.dev_step_outputs)
+        #self.process_validation_results(self.dev_step_outputs)
         self.dev_step_outputs.clear()
 
     def process_validation_results(self, validation_step_outputs):
@@ -284,7 +284,7 @@ class SkeletonProbingModel(LightningModule):
             self.best_val_metrics["summed_loss"] = float(summed_loss.detach().cpu())
             self.best_val_metrics["ref"] = ref_metric
             self.best_val_metrics["epoch"] = ref_metric
-                
+
             for metric, result in metric_results.items():
                 self.best_val_metrics[metric] = float(result.detach().cpu())
 

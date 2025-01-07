@@ -1,5 +1,7 @@
+import binascii
 import glob
 import os
+import uuid
 from pathlib import Path
 
 import numpy
@@ -15,7 +17,7 @@ from model.probing_model import LinearProbingModel
 from utils.data_loading import ProbingDataset, get_unique_inputs
 from utils.experiment_util import check_wandb_run
 from utils.seed_util import seed_all
-
+import redis
 class ProbeWorker:
 
     def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str, cache_folder:str = None):
@@ -91,6 +93,18 @@ class ProbeWorker:
             for k, v in params.items():
                 logger.experiment.config[k] = v
 
+    def log_redis_metrics(self, fields, metrics):
+        r = redis.Redis(host=self.hyperparameter["redis_server"], port=self.hyperparameter["redis_port"], db=0)
+
+        path = "/" +  "/".join([
+            str(v)
+            for k, v in fields.items()
+        ])
+
+        for key, value in metrics.items():
+            if "full" in key or "dump_id" in key:
+                r.set(path + "/" + key.replace(".summary", "").replace(" ", "_"), value)
+
 class GeneralProbeWorker(ProbeWorker):
 
     def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str, cache_folder:str = None):
@@ -142,15 +156,23 @@ class GeneralProbeWorker(ProbeWorker):
 
         if self.logging == "local":
             log_dir = logger.log_dir
+            result_log_dir = log_dir.copy()
+
             if os.path.exists(f"{logger.root_dir}/done") and not self.force:
                 print(f"Already done at {logger.root_dir}/done")
                 return "Done"
+        elif self.logging == "redis":
+            log_dir = logger.log_dir
+            random_id = str(uuid.uuid4())
+            result_log_dir = f"{self.result_folder}/{random_id}"
+            os.system(f"mkdir -p {result_log_dir}")
         else:
             #if check_wandb_run(self.hyperparameter, logger.experiment.project) and not self.force:
             #    print(f"Already done.")
             #    return "Done"
 
             log_dir = f"{self.result_folder}/{logger.experiment.id}"
+            result_log_dir = log_dir.copy()
 
         os.system("mkdir -p " + log_dir)
 
@@ -161,7 +183,12 @@ class GeneralProbeWorker(ProbeWorker):
         prediction_frame, probing_model = self.train_run(log_dir=log_dir, logger=logger)
 
         if self.dump_preds:
-            prediction_frame.to_csv(log_dir +"/preds.csv")
+            prediction_frame.to_csv(result_log_dir +"/preds.csv")
+
+        if self.logging == "redis":
+            metrics = probing_model.best_test_metrics
+            metrics["dump_id"] = result_log_dir
+            self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
 
         self.mark_run_as_done(logger=logger)
 

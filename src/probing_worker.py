@@ -44,6 +44,7 @@ class ProbeWorker:
         self.hyperparameter["device"] = self.device
 
 
+
     def get_local_run_id(self):
         run_id = "/".join([
             self.hyperparameter["model_name"].replace('/', "__"),
@@ -61,6 +62,10 @@ class ProbeWorker:
             return CSVLogger(save_dir=self.result_folder, name=f"{self.project_prefix}-{self.probe_name}/{self.get_local_run_id()}")
         elif self.logging == "local":
             return CSVLogger(save_dir=self.result_folder, name=f"{self.probe_name}/{self.get_local_run_id()}")
+        elif self.logging == "redis" and self.project_prefix != "":
+            return  CSVLogger(save_dir=self.cache_folder, name=f"{self.probe_name}/{self.get_local_run_id()}")
+        elif self.logging == "redis" and self.project_prefix == "":
+            return  CSVLogger(save_dir=self.cache_folder, name=f"{self.project_prefix}-{self.probe_name}/{self.get_local_run_id()}")
         elif self.logging == "wandb" and self.project_prefix != "":
             return WandbLogger(project=self.project_prefix + "-" + self.probe_name, dir=self.cache_folder)
 

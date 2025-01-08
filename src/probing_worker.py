@@ -99,7 +99,7 @@ class ProbeWorker:
         path = "/" +  "/".join([
             str(v)
             for k, v in fields.items()
-        ])
+        ]) + "__RUN"
 
         element = {
             key.replace("summary.", "").replace(" ", "_"): value
@@ -190,7 +190,6 @@ class GeneralProbeWorker(ProbeWorker):
         if self.logging == "redis":
             metrics = probing_model.best_test_metrics
             metrics["dump_id"] = result_log_dir
-            metrics["value_type"] = "run"
             self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
             os.system(f"rm -rf {log_dir}")
         self.mark_run_as_done(logger=logger)

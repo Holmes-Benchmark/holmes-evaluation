@@ -192,7 +192,7 @@ class GeneralProbeWorker(ProbeWorker):
             metrics["dump_id"] = result_log_dir
             metrics["value_type"] = "run"
             self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
-
+            os.system(f"rm -rf {log_dir}")
         self.mark_run_as_done(logger=logger)
 
         return "Done"

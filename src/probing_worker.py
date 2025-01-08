@@ -101,10 +101,12 @@ class ProbeWorker:
             for k, v in fields.items()
         ])
 
-        for key, value in metrics.items():
-            if "full" in key or "dump_id" in key:
-                r.set(path + "/" + key.replace(".summary", "").replace(" ", "_"), value)
-
+        element = {
+            key.replace("summary.", "").replace(" ", "_"): value
+            for key, value in metrics.items()
+            if "full" in key or "dump_id" in key
+        }
+        r.hset(path + "/dump_id", mapping=element)
 class GeneralProbeWorker(ProbeWorker):
 
     def __init__(self, hyperparameter: dict, train_dataset: ProbingDataset, dev_dataset: ProbingDataset, test_dataset: ProbingDataset, n_layers: int, probe_name: str, project_prefix:str, dump_preds:bool, force:bool, result_folder:str, logging:str, cache_folder:str = None):
@@ -188,6 +190,7 @@ class GeneralProbeWorker(ProbeWorker):
         if self.logging == "redis":
             metrics = probing_model.best_test_metrics
             metrics["dump_id"] = result_log_dir
+            metrics["value_type"] = "run"
             self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
 
         self.mark_run_as_done(logger=logger)

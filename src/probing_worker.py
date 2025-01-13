@@ -106,6 +106,7 @@ class ProbeWorker:
             for key, value in metrics.items()
             if "full" in key or "dump_id" in key
         }
+        print("put", path, element)
         r.hset(path, mapping=element)
 class GeneralProbeWorker(ProbeWorker):
 

@@ -249,7 +249,7 @@ class SkeletonProbingModel(LightningModule):
         self.test_step_outputs.clear()
 
     def on_validation_epoch_end(self):
-        #self.process_validation_results(self.dev_step_outputs)
+        self.process_validation_results(self.dev_step_outputs)
         self.dev_step_outputs.clear()
 
     def process_validation_results(self, validation_step_outputs):

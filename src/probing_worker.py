@@ -107,6 +107,8 @@ class ProbeWorker:
             if "full" in key or "dump_id" in key
         }
         print("put", path, element)
+        print(path)
+        print(element)
         r.hset(path, mapping=element)
 class GeneralProbeWorker(ProbeWorker):
 

@@ -104,7 +104,7 @@ class ProbeWorker:
         element = {
             key.replace("summary.", "").replace(" ", "_"): value
             for key, value in metrics.items()
-            if "full" in key or "dump_id" in key
+            if "full" in key or "dump_id" in key or "compression" in key
         }
         print("put", path, element)
         print(path)
@@ -455,6 +455,8 @@ class MDLProbeWorker(GeneralProbeWorker):
                 for metric in test_metrics.keys():
                     metrics["z_test_" + str(i) + "_" + metric + "_step_" +str(fraction_length)] = test_metrics[metric]
                     metrics["z_loss_" + str(i) + "_" + metric + "_step_" +str(fraction_length)] = fraction_loss
+
+
 
         if self.logging == "redis":
             self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)

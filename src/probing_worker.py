@@ -446,10 +446,7 @@ class MDLProbeWorker(GeneralProbeWorker):
             "uniform_length": uniform_code_length,
             "minimum_description_length": minimum_description_length,
             "compression": compression,
-            "seen_compression": seen_compression,
-            "unseen_compression": unseen_compression,
         }
-
 
         for i, (fraction_loss, fraction_length, test_metrics) in enumerate(zip(fraction_losses, fraction_lengths, collected_test_metrics)):
             if i > 0:
@@ -457,5 +454,8 @@ class MDLProbeWorker(GeneralProbeWorker):
                     metrics["z_test_" + str(i) + "_" + metric + "_step_" +str(fraction_length)] = test_metrics[metric]
                     metrics["z_loss_" + str(i) + "_" + metric + "_step_" +str(fraction_length)] = fraction_loss
 
-        logger.log_metrics(metrics)
+        if self.logging == "redis":
+            self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
+        else:
+            logger.log_metrics(metrics)
 

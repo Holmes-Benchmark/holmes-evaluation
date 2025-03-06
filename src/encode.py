@@ -14,7 +14,7 @@ from utils.session_utils import clean_session
 
 @click.command()
 @click.option('--config_file_path', type=str, default='../data/flash-holmes/protoroles-change_of_state/config-none.yaml')
-@click.option('--model_name', type=str, default="Qwen/Qwen2.5-0.5B")
+@click.option('--model_name', type=str, default="Yuuta208/Qwen2.5-Math-1.5B-Instruct-Qwen2.5-Coder-1.5B-Instruct-Merged-linear")
 @click.option('--encoding_batch_size', type=int, default=10)
 @click.option('--model_precision', type=str, default="full")
 @click.option('--dump_folder', type=str, default="../dumps")

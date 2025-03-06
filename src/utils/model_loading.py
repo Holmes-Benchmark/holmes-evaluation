@@ -1,6 +1,7 @@
 import torch
 from sentence_transformers import SentenceTransformer
 from sentence_transformers.models import Transformer
+from transformers import AutoConfig
 
 from defs.control_task_types import CONTROL_TASK_TYPES
 from model.EightBitTransformer import EightBitTransformer
@@ -21,15 +22,15 @@ def load_model(model_name, control_task_type, encoding, scalar_mixin=False):
         device = "cuda" if torch.cuda.is_available() else "cpu"
 
         if "bart" in model_name:
-            transformer = BartTransformer(model_name, model_args={"output_hidden_states": True})
+            transformer = BartTransformer(model_name, config_args={"output_hidden_states": True})
         elif encoding == "half":
-            transformer = HalfPrecisionTransformer(model_name, model_args={"output_hidden_states": True})
+            transformer = HalfPrecisionTransformer(model_name, config_args={"output_hidden_states": True})
         elif encoding == "four_bit":
-            transformer = FourBitTransformer(model_name, model_args={"output_hidden_states": True})
+            transformer = FourBitTransformer(model_name, config_args={"output_hidden_states": True})
         elif encoding == "eight_bit":
-            transformer = EightBitTransformer(model_name, model_args={"output_hidden_states": True})
+            transformer = EightBitTransformer(model_name, config_args={"output_hidden_states": True})
         else:
-            transformer = Transformer(model_name, model_args={"output_hidden_states": True})
+            transformer = Transformer(model_name, config_args={"output_hidden_states": True})
 
         if control_task_type == CONTROL_TASK_TYPES.RANDOM_WEIGHTS and model_name in ["t5-base", "roberta-base", "microsoft/deberta-base", "microsoft/deberta-v3-base", "bert-base-uncased", "albert-base-v2", "google/electra-base-discriminator"]:
             transformer.auto_model.encoder.apply(init_random_weights)

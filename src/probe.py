@@ -27,7 +27,7 @@ def get_hyperparameters(hyperparameters:Dict):
 
 @click.command()
 @click.option('--config_file_path', type=str, default='../data/flash-holmes/protoroles-change_of_state/config-none.yaml')
-@click.option('--model_name', type=str, default="bbunzeck/baby_llama")
+@click.option('--model_name', type=str, default="Qwen/Qwen2.5-0.5B")
 @click.option('--model_precision', type=str, default="full")
 @click.option('--seeds', type=str, default="0,1,2,3,4")
 @click.option('--num_hidden_layers', type=str, default="0")
@@ -39,7 +39,7 @@ def get_hyperparameters(hyperparameters:Dict):
 @click.option('--force', is_flag=True, default=False)
 @click.option('--dump_folder', type=str, default="../dumps")
 @click.option('--result_folder', type=str, default="../results")
-@click.option('--logging', type=str, default="wandb")
+@click.option('--logging', type=str, default="local")
 def main(
         config_file_path, model_name, model_precision, seeds, num_hidden_layers,
         batch_size, run_probe, run_mdl_probe, project_prefix, dump_preds, force,
@@ -92,6 +92,9 @@ def main(
                 hyperparameter["probe_type"] = config["probe_type"]
                 hyperparameter["encoding"] = model_precision
                 hyperparameter["num_labels"] = config["num_labels"]
+                hyperparameter["model_name"] = config["model_name"]
+                hyperparameter["sample_size"] = config["sample_size"]
+                hyperparameter["control_task_type"] = control_task_type.name
 
                 param_ele = {
                     "hyperparameter": hyperparameter,

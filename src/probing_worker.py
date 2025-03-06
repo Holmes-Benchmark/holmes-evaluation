@@ -161,7 +161,7 @@ class GeneralProbeWorker(ProbeWorker):
 
         if self.logging == "local":
             log_dir = logger.log_dir
-            result_log_dir = log_dir.copy()
+            result_log_dir = log_dir
 
             if os.path.exists(f"{logger.root_dir}/done") and not self.force:
                 print(f"Already done at {logger.root_dir}/done")

@@ -112,6 +112,7 @@ def main(
                     "ray_config": ray_config,
                     "n_layers": 1,
                     "result_folder": result_folder,
+                    "cache_folder": "cache",
                     **config
                 }
 

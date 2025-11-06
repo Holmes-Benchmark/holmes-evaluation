@@ -13,9 +13,9 @@ import torch
 from torch.utils.data import Dataset
 from tqdm import tqdm
 
-from defs.control_task_types import CONTROL_TASK_TYPES
-from defs.probe_task_types import PROBE_TASK_TYPES
-from defs.schema import ProbingEntry, ProbingTask, ScalarProbingDataset, ScalarProbingEntry
+from definitions.control_task_types import CONTROL_TASK_TYPES
+from definitions.probe_task_types import PROBE_TASK_TYPES
+from definitions.schema import ProbingEntry, ProbingTask, ScalarProbingDataset, ScalarProbingEntry
 
 
 def get_unique_inputs(inputs):

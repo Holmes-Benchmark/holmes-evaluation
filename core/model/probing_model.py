@@ -9,7 +9,7 @@ from torch.nn import ModuleList
 from torch.utils.data import DataLoader
 from transformers import get_linear_schedule_with_warmup
 
-from defs.schema import ProbingEntry
+from definitions.schema import ProbingEntry
 
 
 class SkeletonProbingModel(LightningModule):

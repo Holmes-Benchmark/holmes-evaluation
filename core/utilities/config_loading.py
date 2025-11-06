@@ -3,9 +3,9 @@ from typing import Dict
 
 from torch.optim import Adam
 
-from defs.control_task_types import CONTROL_TASK_TYPES
-from defs.default_config import DEFAULT_CONFIG
-from defs.probe_task_types import PROBE_TASK_TYPES
+from definitions.control_task_types import CONTROL_TASK_TYPES
+from definitions.default_config import DEFAULT_CONFIG
+from definitions.probe_task_types import PROBE_TASK_TYPES
 
 optimizers = {
     "Adam": Adam

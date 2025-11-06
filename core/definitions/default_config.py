@@ -1,6 +1,6 @@
 from torch.optim import Adam
 
-from defs.probe_task_types import PROBE_TASK_TYPES
+from definitions.probe_task_types import PROBE_TASK_TYPES
 
 DEFAULT_CONFIG = {
     "probes_samples_path": "",

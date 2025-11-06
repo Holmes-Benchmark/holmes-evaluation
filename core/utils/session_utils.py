@@ -1,7 +1,5 @@
 import os
 
-import ray
-
 from probing_worker import GeneralProbeWorker, MDLProbeWorker
 
 
@@ -15,10 +13,6 @@ def clean_session():
         os.system("rm -rf " + os.environ["RAY_SESSION_DIR"])
 
 
-
-@ray.remote(num_gpus=1/24, num_cpus=1)
-def ray_run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix,  logging="local", probe_name=None):
-    run_probe_with_params(params, train_dataset, dev_dataset, test_dataset, dump_preds, force, project_prefix, logging, probe_name)
 
 def run_probe_with_params_pool(args):
     run_probe_with_params(*args)

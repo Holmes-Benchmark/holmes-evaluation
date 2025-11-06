@@ -1,5 +1,5 @@
 # Created by .ignore support plugin (hsz.mobi)
-/src/wandb/
+/core/wandb/
 /src-refactored/wandb/
 /wandb
 /.idea

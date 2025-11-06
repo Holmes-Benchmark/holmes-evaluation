@@ -14,9 +14,8 @@ from sklearn.dummy import DummyRegressor
 from torch.utils.data import Subset
 
 from model.probing_model import LinearProbingModel
-from utils.data_loading import ProbingDataset, get_unique_inputs
-from utils.experiment_util import check_wandb_run
-from utils.seed_util import seed_all
+from utilities.data_loading import ProbingDataset, get_unique_inputs
+from utilities.seed_util import seed_all
 import redis
 class ProbeWorker:
 

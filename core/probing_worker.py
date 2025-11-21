@@ -101,9 +101,8 @@ class ProbeWorker:
         ]) + "__RUN"
 
         element = {
-            key.replace("summary.", "").replace(" ", "_"): value
+            key.replace("summary.", "").replace(" ", "_").replace("z_test_", "_"): value
             for key, value in metrics.items()
-            if "full" in key or "dump_id" in key or "compression" in key
         }
         print("put", path, element)
         print(path)

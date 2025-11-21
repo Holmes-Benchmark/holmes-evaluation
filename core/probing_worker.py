@@ -100,13 +100,28 @@ class ProbeWorker:
             for k, v in fields.items()
         ]) + "__RUN"
 
+        steps = list(set([
+            key.split("step_")[1]
+            for key in metrics.keys()
+            if "step" in key
+        ]))
+
+        for step in steps:
+            step_element = {
+                key.replace("summary.", "").replace(" ", "_"): value
+                for key, value in metrics.items()
+                if f"step_{step}" in key
+            }
+            step_path = f"{path}__STEP__{step}"
+
+            r.hset(step_path, mapping=step_element)
+
         element = {
-            key.replace("summary.", "").replace(" ", "_").replace("z_test_", "_"): value
+            key.replace("summary.", "").replace(" ", "_"): value
             for key, value in metrics.items()
+            if "full" in key or "dump_id" in key or "compression" in key
         }
-        print("put", path, element)
-        print(path)
-        print(element)
+
         r.hset(path, mapping=element)
 class GeneralProbeWorker(ProbeWorker):
 

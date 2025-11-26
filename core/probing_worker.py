@@ -380,7 +380,7 @@ class MDLProbeWorker(GeneralProbeWorker):
             dummy_model.fit(labels, labels)
             samples_labels = dummy_model.predict(labels)
 
-            uniform_code_length = float(torch.nn.MSELoss(reduction="sum")(torch.tensor(samples_labels), torch.tensor(labels)))
+            uniform_code_length = float(torch.nn.SmoothL1Loss(reduction="sum")(torch.tensor(samples_labels), torch.tensor(labels)))
 
             minimum_description_length = first_portion_size * (uniform_code_length / len(ref_dataset)) + sum(fraction_losses)
             compression = uniform_code_length/minimum_description_length

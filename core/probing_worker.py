@@ -119,8 +119,9 @@ class ProbeWorker:
         element = {
             key.replace("summary.", "").replace(" ", "_"): float(value)
             for key, value in metrics.items()
-            if "full" in key or "dump_id" in key or "compression" in key
+            if "full" in key or "dump_id" in key or "compression" in key or "uniform_length" in key or "minimum_description_length" in key
         }
+
 
         r.hset(path, mapping=element)
 class GeneralProbeWorker(ProbeWorker):

@@ -108,7 +108,7 @@ class ProbeWorker:
 
         for step in steps:
             step_element = {
-                key.replace("summary.", "").replace(" ", "_"): float(value)
+                key.replace("summary.", "").replace(" ", "_"): value
                 for key, value in metrics.items()
                 if f"step_{step}" in key
             }
@@ -117,7 +117,7 @@ class ProbeWorker:
             r.hset(step_path, mapping=step_element)
 
         element = {
-            key.replace("summary.", "").replace(" ", "_"): float(value)
+            key.replace("summary.", "").replace(" ", "_"): value
             for key, value in metrics.items()
             if "full" in key or "dump_id" in key or "compression" in key or "uniform_length" in key or "minimum_description_length" in key
         }

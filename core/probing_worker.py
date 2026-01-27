@@ -199,7 +199,7 @@ class GeneralProbeWorker(ProbeWorker):
         self.hyperparameter["cache_folder"] = self.cache_folder
         self.hyperparameter["result_folder"] = self.result_folder
 
-        prediction_frame, probing_model = self.train_run(log_dir=log_dir, logger=logger)
+        prediction_frame, probing_model = self.train_run(log_dir=result_log_dir, logger=logger)
 
         if self.dump_preds:
             prediction_frame.to_csv(result_log_dir +"/preds.csv")

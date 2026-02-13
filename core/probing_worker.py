@@ -208,7 +208,7 @@ class GeneralProbeWorker(ProbeWorker):
             metrics = probing_model.best_test_metrics
             metrics["dump_id"] = result_log_dir
             self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
-            os.system(f"rm -rf {log_dir}")
+            #os.system(f"rm -rf {log_dir}")
         self.mark_run_as_done(logger=logger)
 
         return "Done"

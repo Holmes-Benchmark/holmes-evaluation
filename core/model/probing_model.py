@@ -210,16 +210,19 @@ class SkeletonProbingModel(LightningModule):
             )
 
         for set_name, preds, labels in metric_inputs:
-            if len(preds) == 0:
+            preds = preds.reshape(-1)
+            labels = labels.reshape(-1)
+
+            if preds.numel() == 0:
                 continue
 
             for metric, func in self.metrics.items():
                 #if metric == "pearson":
                 #    pred_labels = pred_labels.squeeze(dim=1)
                 if self.hyperparameter["num_labels"] > 1:
-                    metric_result = func(pred_labels.argmax(1), truth_labels)
+                    metric_result = func(preds.argmax(1), labels)
                 else:
-                    metric_result = func(pred_labels, truth_labels)
+                    metric_result = func(preds, labels)
                 metric_results[set_name + " test " + metric] = float(metric_result)
 
             if self.hyperparameter["num_labels"] > 2:
@@ -360,5 +363,4 @@ class LinearProbingModel(SkeletonProbingModel):
 
     def log_custom_metrics(self, metric_results, set):
         pass
-
 

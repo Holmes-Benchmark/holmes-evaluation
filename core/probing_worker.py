@@ -1,6 +1,7 @@
 import binascii
 import glob
 import os
+import shutil
 import uuid
 from pathlib import Path
 
@@ -47,6 +48,11 @@ class ProbeWorker:
 
 
     def get_local_run_id(self):
+        # NOTE: include fold / generation_id / layer_id so that runs executed in
+        # parallel (Pool) never share a CSVLogger directory. Without these, runs
+        # differing only by fold/layer/generation collide on Lightning's version_N
+        # auto-numbering and the redis-path `rm -rf {log_dir}` cleanup races with
+        # another worker's metrics.csv finalize -> intermittent FileNotFoundError.
         run_id = "/".join([
             self.hyperparameter["model_name"].replace('/', "__"),
             self.hyperparameter["encoding"],
@@ -54,6 +60,9 @@ class ProbeWorker:
             str(self.hyperparameter["sample_size"]),
             str(self.hyperparameter["seed"]),
             str(self.hyperparameter["num_hidden_layers"]),
+            str(self.hyperparameter.get("layer_id", "")),
+            str(self.hyperparameter.get("generation_id", "")),
+            str(self.hyperparameter.get("fold", "")),
         ])
 
         return run_id
@@ -208,7 +217,11 @@ class GeneralProbeWorker(ProbeWorker):
             metrics = probing_model.best_test_metrics
             metrics["dump_id"] = result_log_dir
             self.log_redis_metrics(self.hyperparameter["redis_run_fields"], metrics)
-            #os.system(f"rm -rf {log_dir}")
+            try:
+                logger.finalize("success")
+            except Exception:
+                pass
+            shutil.rmtree(log_dir, ignore_errors=True)
         self.mark_run_as_done(logger=logger)
 
         return "Done"

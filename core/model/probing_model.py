@@ -189,40 +189,17 @@ class SkeletonProbingModel(LightningModule):
             ("unseen",  pred_labels[unseen_indices], truth_labels[unseen_indices]),
         ]
 
-        if self.hyperparameter["num_labels"] == 1:
-
-            lower_quantile = truth_labels.quantile(q=0.25)
-            upper_quantile = truth_labels.quantile(q=0.75)
-
-            lower_quantile_indices = (truth_labels < lower_quantile).nonzero().squeeze()
-            upper_quantile_indices = (truth_labels > upper_quantile).nonzero().squeeze()
-
-            middle_quantile_indices = ((truth_labels > lower_quantile) & (truth_labels < upper_quantile)).nonzero().squeeze()
-
-            metric_inputs.append(
-                ("lower",  pred_labels[lower_quantile_indices], truth_labels[lower_quantile_indices]),
-            )
-            metric_inputs.append(
-                ("middle",  pred_labels[middle_quantile_indices], truth_labels[middle_quantile_indices]),
-            )
-            metric_inputs.append(
-                ("upper",  pred_labels[upper_quantile_indices], truth_labels[upper_quantile_indices]),
-            )
-
         for set_name, preds, labels in metric_inputs:
-            preds = preds.reshape(-1)
-            labels = labels.reshape(-1)
-
-            if preds.numel() == 0:
+            if len(preds) == 0:
                 continue
 
             for metric, func in self.metrics.items():
                 #if metric == "pearson":
                 #    pred_labels = pred_labels.squeeze(dim=1)
                 if self.hyperparameter["num_labels"] > 1:
-                    metric_result = func(preds.argmax(1), labels)
+                    metric_result = func(pred_labels.argmax(1), truth_labels)
                 else:
-                    metric_result = func(preds, labels)
+                    metric_result = func(pred_labels, truth_labels)
                 metric_results[set_name + " test " + metric] = float(metric_result)
 
             if self.hyperparameter["num_labels"] > 2:
@@ -363,4 +340,5 @@ class LinearProbingModel(SkeletonProbingModel):
 
     def log_custom_metrics(self, metric_results, set):
         pass
+
 

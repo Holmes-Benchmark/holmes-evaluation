@@ -21,7 +21,23 @@ class SkeletonProbingModel(LightningModule):
         self.dev_step_outputs = []
         self.test_step_outputs = []
 
-        if self.hyperparameter["num_labels"] == 1:
+        # Objective: "regression" (scalar label), "classification" (integer class label),
+        # or "kl_divergence" (vector probability target, e.g. prior/posterior/flight_number
+        # distribution). When not given, infer from num_labels for backward compatibility.
+        self.objective = self.hyperparameter.get("probe_objective")
+        if self.objective is None:
+            self.objective = "regression" if self.hyperparameter["num_labels"] == 1 else "classification"
+        self.is_distribution = self.objective == "kl_divergence"
+
+        if self.is_distribution:
+            # Probe a full target distribution with a KL objective: the probe outputs
+            # num_labels logits and we minimise KL(target || softmax(logits)). This is
+            # gradient-equivalent to soft cross-entropy, but KL is the reported metric
+            # since it is 0 iff the predicted distribution matches the target exactly.
+            self.mean_loss = torch.nn.KLDivLoss(reduction="batchmean")
+            self.loss = torch.nn.KLDivLoss(reduction="none")
+            self.metrics = {}  # kl / top1 are computed directly in the epoch hooks
+        elif self.hyperparameter["num_labels"] == 1:
             self.mean_loss = torch.nn.SmoothL1Loss()
             self.loss = torch.nn.SmoothL1Loss(reduction='none')
             self.metrics = {
@@ -51,32 +67,35 @@ class SkeletonProbingModel(LightningModule):
 
 
 
+    def _kl_per_sample(self, pred_logits, target_dist):
+        """Per-sample forward KL(target || softmax(pred_logits)); shape (batch,)."""
+        log_pred = torch.log_softmax(pred_logits, dim=-1)
+        return torch.nn.functional.kl_div(log_pred, target_dist, reduction="none").sum(dim=1)
+
+    @staticmethod
+    def _distribution_metrics(pred_dist, target_dist):
+        """KL and top-1 agreement between predicted and target distributions (both probs)."""
+        eps = 1e-12
+        kl = (target_dist * (torch.log(target_dist + eps) - torch.log(pred_dist + eps))).sum(dim=1).mean()
+        top1 = (pred_dist.argmax(dim=1) == target_dist.argmax(dim=1)).float().mean()
+        return {"kl": float(kl), "top1": float(top1)}
+
+    def _collate_labels(self, batch):
+        if self.is_distribution:
+            return torch.FloatTensor(numpy.stack([numpy.asarray(element[2], dtype=numpy.float32) for element in batch]))
+        if self.hyperparameter["num_labels"] == 1:
+            return torch.Tensor([element[2] for element in batch])
+        return torch.LongTensor([element[2] for element in batch])
+
     def batching_collate(self, batch:List):
         encoded_inputs = torch.FloatTensor(numpy.stack([element[1] for element in batch]))
-
-        if self.hyperparameter["num_labels"] == 1:
-            labels = torch.Tensor(
-                [element[2] for element in batch]
-            )
-        else:
-            labels = torch.LongTensor(
-                [element[2] for element in batch]
-            )
-
+        labels = self._collate_labels(batch)
         return encoded_inputs, labels
 
 
     def test_batching_collate(self, batch:List[ProbingEntry]):
         encoded_inputs = torch.FloatTensor(numpy.stack([element[1] for element in batch]))
-
-        if self.hyperparameter["num_labels"] == 1:
-            labels = torch.Tensor(
-                [element[2] for element in batch]
-            )
-        else:
-            labels = torch.LongTensor(
-                [element[2] for element in batch]
-            )
+        labels = self._collate_labels(batch)
 
         seen_indices = torch.BoolTensor(
             [
@@ -105,7 +124,10 @@ class SkeletonProbingModel(LightningModule):
         x = x.to(self.device)
         y = y.to(self.device)
         pred = self(x)
-        if self.hyperparameter["num_labels"] > 1:
+        if self.is_distribution:
+            losses = self._kl_per_sample(pred, y)            # per-sample KL
+            pred = torch.softmax(pred, dim=-1)               # store predicted distribution
+        elif self.hyperparameter["num_labels"] > 1:
             pred = torch.nn.Softmax()(pred)
             losses = self.loss(pred, y)
         else:
@@ -122,7 +144,10 @@ class SkeletonProbingModel(LightningModule):
         x = x.to(self.device)
         y = y.to(self.device)
         pred = self(x)
-        if self.hyperparameter["num_labels"] > 1:
+        if self.is_distribution:
+            losses = self._kl_per_sample(pred, y)            # per-sample KL
+            pred = torch.softmax(pred, dim=-1)               # store predicted distribution
+        elif self.hyperparameter["num_labels"] > 1:
             pred = torch.nn.Softmax()(pred)
             losses = self.loss(pred, y)
         else:
@@ -139,7 +164,9 @@ class SkeletonProbingModel(LightningModule):
         x = x.to(self.device)
         y = y.to(self.device)
         pred = self(x)
-        if self.hyperparameter["num_labels"] > 1:
+        if self.is_distribution:
+            loss = self.mean_loss(torch.log_softmax(pred, dim=-1), y)   # KL(target || softmax(pred))
+        elif self.hyperparameter["num_labels"] > 1:
             pred = torch.nn.Softmax()(pred)
             loss = self.mean_loss(pred, y)
         else:
@@ -189,8 +216,33 @@ class SkeletonProbingModel(LightningModule):
             ("unseen",  pred_labels[unseen_indices], truth_labels[unseen_indices]),
         ]
 
+        if self.hyperparameter["num_labels"] == 1:
+
+            lower_quantile = truth_labels.quantile(q=0.25)
+            upper_quantile = truth_labels.quantile(q=0.75)
+
+            lower_quantile_indices = (truth_labels < lower_quantile).nonzero().squeeze()
+            upper_quantile_indices = (truth_labels > upper_quantile).nonzero().squeeze()
+
+            middle_quantile_indices = ((truth_labels > lower_quantile) & (truth_labels < upper_quantile)).nonzero().squeeze()
+
+            metric_inputs.append(
+                ("lower",  pred_labels[lower_quantile_indices], truth_labels[lower_quantile_indices]),
+            )
+            metric_inputs.append(
+                ("middle",  pred_labels[middle_quantile_indices], truth_labels[middle_quantile_indices]),
+            )
+            metric_inputs.append(
+                ("upper",  pred_labels[upper_quantile_indices], truth_labels[upper_quantile_indices]),
+            )
+
         for set_name, preds, labels in metric_inputs:
             if len(preds) == 0:
+                continue
+
+            if self.is_distribution:
+                for metric, value in self._distribution_metrics(preds, labels).items():
+                    metric_results[set_name + " test " + metric] = value
                 continue
 
             for metric, func in self.metrics.items():
@@ -213,7 +265,15 @@ class SkeletonProbingModel(LightningModule):
             self.log(metric, result, on_epoch=True, prog_bar=True)
 
         self.best_test_metrics["summed_loss"] = float(losses_sum.detach().cpu())
-        if self.hyperparameter["num_labels"] >= 2:
+        if self.is_distribution:
+            # Keep preds.csv compact: store top-1 of the predicted and target distributions
+            # (per-sample KL lives in test_losses); the full predicted distribution is in test_raw_preds.
+            self.test_raw_preds = pred_labels.detach().cpu().double()
+            self.test_preds = pred_labels.argmax(dim=1).detach().cpu().double().numpy()
+            self.test_labels = truth_labels.argmax(dim=1).detach().cpu().double().numpy()
+            self.test_losses = losses.detach().cpu().double().numpy()
+            self.test_seen_indices = seen_indices
+        elif self.hyperparameter["num_labels"] >= 2:
             self.test_raw_preds = pred_labels.detach().cpu().double()
             self.test_preds = pred_labels.argmax(dim=1).detach().cpu().double().numpy()
             self.test_labels = truth_labels.detach().cpu()
@@ -246,19 +306,26 @@ class SkeletonProbingModel(LightningModule):
 
         metric_results = {}
 
-        for metric, func in self.metrics.items():
-
-            if self.hyperparameter["num_labels"] > 1:
-                metric_result = func(pred_labels.argmax(1), truth_labels)
-            else:
-                metric_result = func(pred_labels, truth_labels)
-
-            metric_results[metric] = metric_result
-
-        if "pearson" in metric_results:
-            ref_metric = float(metric_results["pearson"].detach().cpu())
+        if self.is_distribution:
+            eps = 1e-12
+            kl = (truth_labels * (torch.log(truth_labels + eps) - torch.log(pred_labels + eps))).sum(dim=1).mean()
+            top1 = (pred_labels.argmax(1) == truth_labels.argmax(1)).float().mean()
+            metric_results = {"kl": kl, "top1": top1}
+            ref_metric = float(-kl.detach().cpu())   # lower KL is better -> higher ref for the >= check
         else:
-            ref_metric = float(metric_results["f1"].detach().cpu())
+            for metric, func in self.metrics.items():
+
+                if self.hyperparameter["num_labels"] > 1:
+                    metric_result = func(pred_labels.argmax(1), truth_labels)
+                else:
+                    metric_result = func(pred_labels, truth_labels)
+
+                metric_results[metric] = metric_result
+
+            if "pearson" in metric_results:
+                ref_metric = float(metric_results["pearson"].detach().cpu())
+            else:
+                ref_metric = float(metric_results["f1"].detach().cpu())
 
         if ref_metric >= self.best_val_metrics["ref"] and self.current_epoch > 2:
             self.best_val_metrics["summed_loss"] = float(summed_loss.detach().cpu())
@@ -271,7 +338,7 @@ class SkeletonProbingModel(LightningModule):
         for metric, metric_result in metric_results.items():
             self.log("val " + metric, metric_result,  on_epoch=True, prog_bar=True)
 
-        if self.hyperparameter["num_labels"] > 2:
+        if self.hyperparameter["num_labels"] > 2 and not self.is_distribution:
             for label, value in enumerate(self.f1_all.cpu()(pred_labels.cpu(), truth_labels.cpu())):
                 self.log("z_val f1-" + str(label), value, on_epoch=True, prog_bar=False)
             for label, value in enumerate(self.acc_all.cpu()(pred_labels.cpu(), truth_labels.cpu())):

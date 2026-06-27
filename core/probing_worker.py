@@ -167,9 +167,14 @@ class GeneralProbeWorker(ProbeWorker):
 
         print("pred done")
 
+        # For distribution probes the dataset label is a full probability vector; store the
+        # model's compact top-1 target instead so preds.csv stays small.
+        label_source = (probing_model.test_labels
+                        if getattr(probing_model, "is_distribution", False)
+                        else self.test_dataset.labels)
         test_predictions = [
             (instance_input, pred, instance_label, loss, "seen" if seen_index else "unseen")
-            for instance_input, instance_label, pred, loss, seen_index in zip(self.test_dataset.inputs, self.test_dataset.labels, probing_model.test_preds, probing_model.test_losses, probing_model.test_seen_indices)
+            for instance_input, instance_label, pred, loss, seen_index in zip(self.test_dataset.inputs, label_source, probing_model.test_preds, probing_model.test_losses, probing_model.test_seen_indices)
         ]
 
         test_prediction_frame = pandas.DataFrame(test_predictions)
@@ -456,9 +461,14 @@ class MDLProbeWorker(GeneralProbeWorker):
         )
         print("pred done")
 
+        # For distribution probes the dataset label is a full probability vector; store the
+        # model's compact top-1 target instead so preds.csv stays small.
+        label_source = (probing_model.test_labels
+                        if getattr(probing_model, "is_distribution", False)
+                        else self.test_dataset.labels)
         test_predictions = [
             (instance_input, pred, instance_label, loss, "seen" if seen_index else "unseen")
-            for instance_input, instance_label, pred, loss, seen_index in zip(self.test_dataset.inputs, self.test_dataset.labels, probing_model.test_preds, probing_model.test_losses, probing_model.test_seen_indices)
+            for instance_input, instance_label, pred, loss, seen_index in zip(self.test_dataset.inputs, label_source, probing_model.test_preds, probing_model.test_losses, probing_model.test_seen_indices)
         ]
 
         test_prediction_frame = pandas.DataFrame(test_predictions)

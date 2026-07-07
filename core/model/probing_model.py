@@ -237,7 +237,7 @@ class SkeletonProbingModel(LightningModule):
             )
 
         for set_name, preds, labels in metric_inputs:
-            if len(preds) == 0:
+            if preds.numel() == 0:
                 continue
 
             if self.is_distribution:

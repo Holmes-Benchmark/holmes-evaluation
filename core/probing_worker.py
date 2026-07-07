@@ -173,12 +173,12 @@ class GeneralProbeWorker(ProbeWorker):
                         if getattr(probing_model, "is_distribution", False)
                         else self.test_dataset.labels)
         test_predictions = [
-            (instance_input, pred, instance_label, loss, "seen" if seen_index else "unseen")
-            for instance_input, instance_label, pred, loss, seen_index in zip(self.test_dataset.inputs, label_source, probing_model.test_preds, probing_model.test_losses, probing_model.test_seen_indices)
+            (instance_input, pred, instance_label, loss)
+            for instance_input, instance_label, pred, loss in zip(self.test_dataset.inputs, label_source, probing_model.test_preds, probing_model.test_losses)
         ]
 
         test_prediction_frame = pandas.DataFrame(test_predictions)
-        test_prediction_frame.columns = ["instance", "pred", "label", "loss", "seen"]
+        test_prediction_frame.columns = ["instance", "pred", "label", "loss"]
 
         return test_prediction_frame, probing_model
 
@@ -240,16 +240,11 @@ class MDLProbeWorker(GeneralProbeWorker):
 
 
 
-    def train_mdl_run(self, train_dataset, dev_online_dataset, dev_online_seen_indices, dev_online_unseen_indices, dev_dataset, test_dataset, log_dir, logger=None):
+    def train_mdl_run(self, train_dataset, dev_online_dataset, dev_dataset, test_dataset, log_dir, logger=None):
 
-        dev_online_seen_indices = [ele for ele in dev_online_seen_indices if ele < len(dev_online_dataset)]
-        dev_online_unseen_indices = [ele for ele in dev_online_unseen_indices if ele < len(dev_online_dataset)]
 
 
         batch_size = self.hyperparameter["batch_size"]
-
-        test_seen_indices = test_dataset.get_seen_indices()
-        test_unseen_indices = test_dataset.get_unseen_indices()
 
         probing_model = self.probing_model(
             hyperparameter=self.hyperparameter,
@@ -273,22 +268,12 @@ class MDLProbeWorker(GeneralProbeWorker):
 
         dev_metrics = trainer.validate(ckpt_path="best", dataloaders=[dev_online_dataloader])
 
-        if len(dev_online_seen_indices) > 0:
-            dev_seen_losses = probing_model.dev_losses[dev_online_seen_indices]
-        else:
-            dev_seen_losses = []
-
-        if len(dev_online_unseen_indices) > 0:
-            dev_unseen_losses = probing_model.dev_losses[dev_online_unseen_indices]
-        else:
-            dev_unseen_losses = []
-
         test_metrics = trainer.test(ckpt_path="best", dataloaders=[test_dataloader])[0]
 
 
         summed_loss = dev_metrics[0]["val loss sum"]
 
-        return summed_loss, dev_seen_losses, dev_unseen_losses, dev_online_seen_indices, dev_online_unseen_indices, test_metrics
+        return summed_loss, test_metrics
 
 
 
@@ -306,38 +291,27 @@ class MDLProbeWorker(GeneralProbeWorker):
         print(fraction_length)
         print(fraction_length)
 
-        train_inputs = ref_dataset.inputs[:fraction_length]
-        train_unique_inputs = get_unique_inputs(train_inputs)
-        dev_online_inputs = ref_dataset.inputs[fraction_length:fraction_length*2 - 1]
-        dev_online_seen_indices = [i for i, element in enumerate(dev_online_inputs) if tuple([ele[0].lower() for ele in element]) in train_unique_inputs]
-        dev_online_unseen_indices = [i for i, element in enumerate(dev_online_inputs) if tuple([ele[0].lower() for ele in element]) not in train_unique_inputs]
 
-        summed_loss, dev_seen_losses, dev_unseen_losses, dev_online_seen_indices, dev_online_unseen_indices, test_metrics = self.train_mdl_run(
-            train_dataset, dev_online_dataset, dev_online_seen_indices, dev_online_unseen_indices,
+        summed_loss, test_metrics = self.train_mdl_run(
+            train_dataset, dev_online_dataset,
             dev_dataset, test_dataset, log_dir + "/frac-" + str(fraction_length), logger=False
         )
 
-        return summed_loss, dev_seen_losses, dev_unseen_losses, dev_online_seen_indices, dev_online_unseen_indices, test_metrics, len(dev_online_dataset)
+        return summed_loss, test_metrics, len(dev_online_dataset)
 
 
     def run_mdl_tasks(self, fractions, log_dir, ref_dataset, dev_dataset, test_dataset):
 
         fraction_losses = []
-        seen_fraction_losses = []
-        unseen_fraction_losses = []
         collected_test_metrics = []
         fraction_lengths = []
-        seen_fraction_lengths = []
-        unseen_fraction_lengths = []
         overall_test_metrics = []
 
-        all_dev_online_seen_indices = []
-        all_dev_online_unseen_indices = []
 
         for fraction in fractions:
 
 
-            summed_loss, dev_seen_losses, dev_unseen_losses, dev_online_seen_indices, dev_online_unseen_indices, test_metrics, fraction_length = self.run_linear_task_fraction(
+            summed_loss, test_metrics, fraction_length = self.run_linear_task_fraction(
                 fraction=fraction, ref_dataset=ref_dataset, dev_dataset=dev_dataset,
                 test_dataset=test_dataset, log_dir=log_dir
             )
@@ -345,24 +319,15 @@ class MDLProbeWorker(GeneralProbeWorker):
             if fraction_length == 0:
                 continue
 
-            all_dev_online_seen_indices.append(dev_online_seen_indices)
-            all_dev_online_unseen_indices.append(dev_online_unseen_indices)
-
 
             if self.is_regression:
                 collected_test_metrics.append({
                     "pearson": test_metrics.get("full test pearson", 0),
-                    "seen_pearson": test_metrics.get("seen test pearson", 0),
-                    "unseen_pearson": test_metrics.get("unseen test pearson", 0),
                 })
             else:
                 collected_test_metrics.append({
                     "acc": test_metrics.get("full test acc", 0),
                     "f1": test_metrics.get("full test f1", 0),
-                    "seen_acc": test_metrics.get("seen acc", 0),
-                    "seen_f1": test_metrics.get("seen f1", 0),
-                    "unseen_acc": test_metrics.get("unseen acc", 0),
-                    "unseen_f1": test_metrics.get("unseen f1", 0),
                 })
 
             test_metrics["fraction"] = fraction
@@ -372,19 +337,6 @@ class MDLProbeWorker(GeneralProbeWorker):
             fraction_lengths.append(fraction_length)
             fraction_losses.append(summed_loss)
 
-            if len(dev_seen_losses) == 0:
-                seen_fraction_lengths.append(0)
-                seen_fraction_losses.append(0)
-            else:
-                seen_fraction_losses.append(dev_seen_losses.sum())
-                seen_fraction_lengths.append(len(dev_seen_losses))
-
-            if len(dev_unseen_losses) == 0:
-                unseen_fraction_lengths.append(0)
-                unseen_fraction_losses.append(0)
-            else:
-                unseen_fraction_lengths.append(len(dev_unseen_losses))
-                unseen_fraction_losses.append(dev_unseen_losses.sum())
 
 
         os.system("rm -rf " + log_dir + "/frac*")
@@ -402,22 +354,13 @@ class MDLProbeWorker(GeneralProbeWorker):
 
             minimum_description_length = first_portion_size * (uniform_code_length / len(ref_dataset)) + sum(fraction_losses)
             compression = uniform_code_length/minimum_description_length
-            seen_compression = 0
-            unseen_compression = 0
 
         else:
             uniform_code_length = len(ref_dataset) * numpy.log2(self.hyperparameter["num_labels"])
             minimum_description_length = first_portion_size * numpy.log2(self.hyperparameter["num_labels"]) + sum(fraction_losses)
-            seen_minimum_description_length = first_portion_size * numpy.log2(self.hyperparameter["num_labels"]) + sum(seen_fraction_losses)
-            unseen_minimum_description_length = first_portion_size * numpy.log2(self.hyperparameter["num_labels"]) + sum(unseen_fraction_losses)
-
-            seen_uniform_code_length = sum(seen_fraction_lengths) * numpy.log2(self.hyperparameter["num_labels"])
-            unseen_uniform_code_length = sum(unseen_fraction_lengths) * numpy.log2(self.hyperparameter["num_labels"])
             compression = uniform_code_length/minimum_description_length
-            seen_compression = seen_uniform_code_length/seen_minimum_description_length
-            unseen_compression = unseen_uniform_code_length/unseen_minimum_description_length
 
-        return uniform_code_length, minimum_description_length, compression, seen_compression, unseen_compression, fraction_losses, fraction_lengths, collected_test_metrics
+        return uniform_code_length, minimum_description_length, compression, fraction_losses, fraction_lengths, collected_test_metrics
 
 
     def train_run(self, log_dir, logger):
@@ -447,7 +390,7 @@ class MDLProbeWorker(GeneralProbeWorker):
 
         trainer.test(ckpt_path="best", dataloaders=[test_dataloader])
 
-        uniform_code_length, minimum_description_length, compression, seen_compression, unseen_compression, fraction_losses, fraction_lengths, collected_test_metrics = self.run_mdl_tasks(
+        uniform_code_length, minimum_description_length, compression, fraction_losses, fraction_lengths, collected_test_metrics = self.run_mdl_tasks(
             fractions=[1/1024, 1/512, 1/256, 1/128, 1/64, 1/32, 1/16, 1/8, 1/4, 1/2],
             log_dir=log_dir,
             ref_dataset=self.train_dataset,
@@ -456,7 +399,7 @@ class MDLProbeWorker(GeneralProbeWorker):
         )
 
         self.save_mdl_metrics(
-            logger, uniform_code_length, minimum_description_length, compression, seen_compression, unseen_compression,
+            logger, uniform_code_length, minimum_description_length, compression,
             fraction_losses, fraction_lengths, collected_test_metrics
         )
         print("pred done")
@@ -467,18 +410,18 @@ class MDLProbeWorker(GeneralProbeWorker):
                         if getattr(probing_model, "is_distribution", False)
                         else self.test_dataset.labels)
         test_predictions = [
-            (instance_input, pred, instance_label, loss, "seen" if seen_index else "unseen")
-            for instance_input, instance_label, pred, loss, seen_index in zip(self.test_dataset.inputs, label_source, probing_model.test_preds, probing_model.test_losses, probing_model.test_seen_indices)
+            (instance_input, pred, instance_label, loss)
+            for instance_input, instance_label, pred, loss in zip(self.test_dataset.inputs, label_source, probing_model.test_preds, probing_model.test_losses)
         ]
 
         test_prediction_frame = pandas.DataFrame(test_predictions)
-        test_prediction_frame.columns = ["instance", "pred", "label", "loss", "seen"]
+        test_prediction_frame.columns = ["instance", "pred", "label", "loss"]
 
         return test_prediction_frame, probing_model
 
 
     def save_mdl_metrics(
-            self, logger, uniform_code_length, minimum_description_length, compression, seen_compression, unseen_compression,
+            self, logger, uniform_code_length, minimum_description_length, compression,
             fraction_losses, fraction_lengths, collected_test_metrics
     ):
         metrics = {

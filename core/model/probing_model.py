@@ -97,13 +97,8 @@ class SkeletonProbingModel(LightningModule):
         encoded_inputs = torch.FloatTensor(numpy.stack([element[1] for element in batch]))
         labels = self._collate_labels(batch)
 
-        seen_indices = torch.BoolTensor(
-            [
-                element[0] for element in batch
-            ]
-        )
 
-        return encoded_inputs, labels, seen_indices
+        return encoded_inputs, labels
 
     def get_dataloader(self, dataset, batch_size, shuffle=False):
         dataloader = DataLoader(
@@ -140,7 +135,7 @@ class SkeletonProbingModel(LightningModule):
         return losses, pred, y
 
     def run_test_step(self, batch, prefix):
-        x, y, seen_indices = batch
+        x, y = batch
         x = x.to(self.device)
         y = y.to(self.device)
         pred = self(x)
@@ -156,8 +151,8 @@ class SkeletonProbingModel(LightningModule):
             losses = losses.squeeze(1)
 
         #self.log(prefix + " loss", losses.mean(), on_epoch=True, prog_bar=True)
-        self.test_step_outputs.append([losses, pred, y, seen_indices])
-        return losses, pred, y, seen_indices
+        self.test_step_outputs.append([losses, pred, y])
+        return losses, pred, y
 
     def training_step(self, batch, batch_index):
         x, y = batch[0]
@@ -202,39 +197,14 @@ class SkeletonProbingModel(LightningModule):
         preds = [ele[1] for ele in self.test_step_outputs]
         truths = [ele[2] for ele in self.test_step_outputs]
 
-        seen_indices = [ele[3] for ele in self.test_step_outputs]
-
         pred_labels = torch.cat(preds).detach().cpu()
         truth_labels = torch.cat(truths).detach().cpu()
-        seen_indices = torch.cat(seen_indices).detach().cpu()
-        unseen_indices = seen_indices == False
         metric_results = {}
 
         metric_inputs = [
-            ("full", pred_labels, truth_labels),
-            ("seen",  pred_labels[seen_indices], truth_labels[seen_indices]),
-            ("unseen",  pred_labels[unseen_indices], truth_labels[unseen_indices]),
+            ("full", pred_labels, truth_labels)
         ]
 
-        if self.hyperparameter["num_labels"] == 1:
-
-            lower_quantile = truth_labels.quantile(q=0.25)
-            upper_quantile = truth_labels.quantile(q=0.75)
-
-            lower_quantile_indices = (truth_labels < lower_quantile).nonzero().squeeze()
-            upper_quantile_indices = (truth_labels > upper_quantile).nonzero().squeeze()
-
-            middle_quantile_indices = ((truth_labels > lower_quantile) & (truth_labels < upper_quantile)).nonzero().squeeze()
-
-            metric_inputs.append(
-                ("lower",  pred_labels[lower_quantile_indices], truth_labels[lower_quantile_indices]),
-            )
-            metric_inputs.append(
-                ("middle",  pred_labels[middle_quantile_indices], truth_labels[middle_quantile_indices]),
-            )
-            metric_inputs.append(
-                ("upper",  pred_labels[upper_quantile_indices], truth_labels[upper_quantile_indices]),
-            )
 
         for set_name, preds, labels in metric_inputs:
             if preds.numel() == 0:
@@ -272,19 +242,16 @@ class SkeletonProbingModel(LightningModule):
             self.test_preds = pred_labels.argmax(dim=1).detach().cpu().double().numpy()
             self.test_labels = truth_labels.argmax(dim=1).detach().cpu().double().numpy()
             self.test_losses = losses.detach().cpu().double().numpy()
-            self.test_seen_indices = seen_indices
         elif self.hyperparameter["num_labels"] >= 2:
             self.test_raw_preds = pred_labels.detach().cpu().double()
             self.test_preds = pred_labels.argmax(dim=1).detach().cpu().double().numpy()
             self.test_labels = truth_labels.detach().cpu()
             self.test_losses = losses.detach().cpu().double().numpy()
-            self.test_seen_indices = seen_indices
         else:
             self.test_raw_preds = pred_labels.detach().cpu().double()
             self.test_preds = pred_labels.detach().cpu().double().numpy()
             self.test_labels = truth_labels.detach().cpu()
             self.test_losses = losses.detach().cpu().double().numpy()
-            self.test_seen_indices = seen_indices
 
         self.test_step_outputs.clear()
 
